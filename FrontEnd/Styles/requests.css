@@ -1,0 +1,179 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  font-family: "Ubuntu";
+}
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 20px;
+  margin-top: 50px;
+  gap: 70px;
+}
+h1 {
+  font-size: 30px;
+}
+h2 {
+  font-size: 20px;
+  font-weight: 400;
+}
+span {
+  font-weight: 400;
+}
+nav button {
+  background-color: #eda3a3;
+  border-radius: 5px;
+  width: 150px;
+  border: 0px;
+  height: 50px;
+}
+nav button:hover {
+  cursor: pointer;
+  background-color: #e7c8c8;
+}
+.labelSection {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.labelSection div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.labelSection nav {
+  margin-left: auto;
+}
+.gridSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.grid {
+  background-color: #e7c8c8;
+  padding: 30px;
+  height: 350px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  border-radius: 5px;
+}
+.clientDataDiv {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 25px;
+  overflow: auto;
+}
+.orderSettingsDiv {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  overflow: auto;
+  gap: 20px;
+}
+#orderItemsDiv {
+  border: 1px solid;
+  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.1);
+  border-radius: 10px;
+  height: max-content;
+  margin: 10px;
+  padding: 5px;
+  justify-items: center;
+}
+#orderItemsDiv img {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+}
+.orderItemsTable {
+  width: 500px;
+  height: 250px;
+  background-color: #eda3a3;
+  border-radius: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  overflow: auto;
+  justify-content: left;
+}
+.orderPreparingButtonsDiv {
+  display: flex;
+  gap: 15px;
+  width: 500px;
+  justify-content: right;
+}
+.orderPreparingButtons {
+  width: 50px;
+  background-color: #eda3a3;
+  border: 0;
+  border-radius: 5px;
+  font-size: large;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s;
+}
+.orderPreparingButtons:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}
+.orderPreparingButtons img {
+  width: 30px;
+}
+.preparingOrder {
+  background-color: #beabf8;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  font-style: italic;
+  font-family: "Noto Sans";
+  transition: 0.5s;
+}
+.labelItemsTable {
+  width: 500px;
+  display: flex;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 1150px) {
+  body {
+    margin-bottom: 120px;
+  }
+  .grid {
+    flex-direction: column;
+    height: 100%;
+    gap: 30px;
+  }
+  .labelItemsTable {
+    width: 100%;
+  }
+  .orderItemsTable {
+    width: 100%;
+  }
+  .orderPreparingButtonsDiv {
+    width: 100%;
+  }
+  .clientDataDiv {
+    width: 100%;
+  }
+  .preparingOrder {
+    width: 50%;
+  }
+  .orderSettingsDiv {
+    width: 100%;
+  }
+}

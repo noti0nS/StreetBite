@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../../Styles/menu.css" />
+    <script src="../../Scripts/menu.js" defer></script>
+  </head>
+  <body>
+    <main class="main">
+      <section class="labelSection">
+        <div>
+          <h1>Cardápio</h1>
+          <h2>Lista de Itens contidos no Cardápio</h2>
+        </div>
+        <nav>
+          <button class="createItem">Criar Novo Item</button>
+        </nav>
+      </section>
+      <section class="gridSection"></section>
+
+      <section class="modalSection">
+        <div class="modalContent">
+          <div class="labelDiv">
+            <h3>Crie um novo Item</h3>
+            <button class="closeButton">X</button>
+          </div>
+          <div class="mainItemDiv">
+            <div class="imgDiv">
+              <div class="imgDivModal">
+                <img id="imageImg" src="" />
+              </div>
+              <input
+                class="hidden"
+                type="file"
+                id="files"
+                src=""
+                alt=""
+                accept="image/*"
+              />
+              <label for="files" class="inputImg">Selecione um Arquivo</label>
+            </div>
+
+            <div class="inputsDiv">
+              <div class="eachInput">
+                <label>Nome</label>
+                <input type="text" id="inputName" />
+              </div>
+              <div class="eachInput">
+                <label>Categoria</label>
+                <select id="selectCategory">
+                  <option value="LANCHE">Lanche</option>
+                  <option value="ACOMPANHAMENTO">Acompanhamento</option>
+                  <option value="BEBIDA">Bebida</option>
+                  <option value="COMBO">Combo</option>
+                </select>
+              </div>
+              <div class="eachInput">
+                <label>Preço</label>
+                <input type="number" id="inputPrice" />
+              </div>
+              <input
+                class="inputDescription"
+                placeholder="Descrição"
+                id="inputDesc"
+              />
+            </div>
+          </div>
+          <div class="bottomModalDiv">
+            <button class="buttonCancel">Cancelar</button>
+            <button class="buttonCreate">Criar</button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- VLibras -->
+    <div vw class="enabled">
+      <div vw-access-button class="active"></div>
+      <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+      </div>
+    </div>
+
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+      new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+  </body>
+</html>

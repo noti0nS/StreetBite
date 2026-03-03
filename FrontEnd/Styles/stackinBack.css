@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  font-family: "Ubuntu";
+}
+body {
+  overflow: hidden;
+}
+.logo {
+  display: flex;
+  height: 200px;
+  width: 200px;
+  transition: 0.3;
+}
+.mainSection {
+  display: flex;
+  flex-direction: row;
+}
+.sideBar {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  background-color: #ffffff;
+  height: 100vh;
+  gap: 10px;
+  align-items: center;
+  border-right: 1px solid rgb(204, 203, 203);
+  transition: 0.5s all;
+}
+.buttonsNav {
+  width: 90%;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.navBarButtons {
+  width: 100%;
+  height: 50px;
+  background-color: #eda3a3;
+  border-radius: 5px;
+  border: 0;
+  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.1);
+  transition: 0.3s all;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  font-size: 15px;
+  font-weight: 400;
+}
+.navBarButtons img {
+  height: 20px;
+  width: 20px;
+}
+.navBarButtons:hover {
+  cursor: pointer;
+  background-color: #e7c8c8;
+}
+
+.sideBar h1 {
+  margin: 30px;
+  font-weight: 400;
+}
+.main {
+  border: 1px solid;
+}
+h1 {
+  font-size: 30px;
+}
+h1 img {
+  height: 35px;
+  width: 35px;
+}
+iframe {
+  height: 100vh;
+  width: 100vw;
+}
+
+@media only screen and (max-width: 1150px) {
+  .sideBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100px;
+    width: 100%;
+    box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.2);
+  }
+  .logo {
+    display: none;
+  }
+  .buttonsNav {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .navBarButtons {
+    height: 80px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}

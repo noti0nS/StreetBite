@@ -1,0 +1,45 @@
+
+
+ENDEREÇO -> O endereço só pode ser criado caso já haja um cliente.
+{
+    "clienteId":,
+    "cep":00000000,
+    "nomeDaRua": "RuaTeste",
+    "numeroDaCasa" "10"
+}
+
+CLIENTE
+
+{
+    "nome": Jason,
+    "telefone" 11111111:
+}
+
+{
+    "nome": Roberta,
+    "telefone" 22222222:
+}
+
+PRODUTO
+
+{
+    "nome": "Coca-Cola",
+    "preco": 4.5,
+    "categoria": "BEBIDA"
+}
+
+{
+    "nome": "Pizza",
+    "preco": 12.0,
+    "categoria": "LANCHE"
+}
+
+ITEM -> Só pode ser criado se já houver um Produto e uma Comanda.
+
+{
+    "produtoId":, 
+    "comandaId":,
+    "quantidade":
+}
+
+COMANDA -> Pode ser criada sem a necessidade de passar o body.

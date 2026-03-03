@@ -1,0 +1,476 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  font-family: "Ubuntu";
+  scroll-behavior: smooth;
+}
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 20px;
+  margin-top: 50px;
+  gap: 70px;
+}
+h1 {
+  font-size: 30px;
+}
+h2 {
+  font-size: 20px;
+  font-weight: 400;
+}
+span {
+  font-weight: 400;
+}
+nav button {
+  background-color: #eda3a3;
+  border-radius: 5px;
+  width: 150px;
+  border: 0px;
+  height: 50px;
+}
+nav button:hover {
+  cursor: pointer;
+  background-color: #e7c8c8;
+}
+.labelSection {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.labelSection div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.labelSection nav {
+  margin-left: auto;
+}
+.gridSection {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.grid {
+  background-color: #f6f6f6;
+  width: 100%;
+  height: 550px;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  border-radius: 5px;
+  border: 0.1px solid #f6f6f6;
+  transition: 0.3s;
+}
+
+.buttonsLocalDiv {
+  gap: 10px;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+.aLocal {
+  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.1);
+  background-color: #eda3a3;
+  border: 0.5px solid #eda3a3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  width: 300px;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+a {
+  text-decoration: none;
+}
+.buttonsLocal {
+  background-color: transparent;
+  border: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.buttonsLocalDiv img {
+  height: 90px;
+}
+
+.aLocal:hover {
+  border: 1dvh solid #df7272;
+}
+
+.buttonsLocal:hover {
+  cursor: pointer;
+}
+.bottomButtons {
+  background-color: #eda3a3;
+  border: 0;
+  width: 300px;
+  padding: 10px;
+  border-radius: 5px;
+  transition: 0.3s;
+  font-weight: bold;
+}
+
+.bottomButtons:hover {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.gridSection h2 {
+  font-size: 30px;
+}
+.eachInput label {
+  font-weight: 400;
+}
+input {
+  background-color: #eda3a3;
+  width: 200px;
+  height: 30px;
+  padding: 5px;
+  border: 0;
+  border-radius: 5px;
+}
+.emptyInput {
+  border: 2px solid #ce4747;
+  transition: 0.3s;
+}
+.nonEmptyInput {
+  border: 2px solid #4eee96;
+  transition: 0.3s;
+}
+.eachInput .selectPayment {
+  background-color: #e7c8c8;
+  width: 200px;
+  height: 50px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.eachInput {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filterArea .eachInput {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.eachInput input {
+  width: 150px;
+}
+.allInputs {
+  display: flex;
+  flex-direction: row;
+  gap: 200px;
+  margin: auto;
+}
+.labelInputs {
+  margin-bottom: 20px;
+}
+
+.eachInput .inputsPlace {
+  background-color: #e7c8c8;
+  width: 150px;
+}
+.eachInput .inputsPlace:disabled {
+  font-style: italic;
+  color: #aca8a8;
+}
+.dataInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fullTable {
+  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.1);
+  border-radius: 10px;
+  width: 800px;
+  height: 600px;
+  padding: 15px;
+  display: flex;
+  flex-direction: row;
+  background-color: #eda3a3;
+}
+
+.ItemsTable {
+  background-color: #e7c8c8;
+  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.2);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 600px;
+  height: 95%;
+  border-radius: 10px;
+}
+
+.filterArea {
+  width: 300px;
+  float: right;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.filterArea select {
+  background-color: #e7c8c8;
+  width: 150px;
+  height: 30px;
+  border-radius: 5px;
+  font-style: italic;
+}
+.filterArea h3 {
+  font-size: 15px;
+  font-weight: 300;
+}
+
+.tableGrid {
+  width: 100%;
+  border-radius: 5px;
+  height: 80px;
+  background-color: #eda3a3;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.tableGrid h2 {
+  font-size: 20px;
+  font-weight: 500;
+}
+.tableGrid h3 {
+  font-weight: 400;
+  font-style: italic;
+  font-size: 15px;
+}
+.itemsCountDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+.itemImage {
+  background-color: #e7c8c8;
+  border-radius: 5px;
+  height: 70px;
+  width: 70px;
+  border: 1px solid rgb(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.2);
+}
+.itemImage img {
+  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+.itemCount {
+  height: 40px;
+  width: 70px;
+  padding: 5px;
+  background-color: #e7c8c8;
+  border: 0;
+  border-radius: 5px;
+  display: flex;
+  justify-items: center;
+  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.1);
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.itemsCountButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  background-color: #e7c8c8;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  border: 0;
+  transition: 0.3s;
+  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.1);
+}
+.itemsCountButtons:hover {
+  opacity: 0.7;
+  cursor: pointer;
+}
+.bottomButtonsDiv {
+  display: flex;
+  gap: 20px;
+}
+
+.subtotalItemsDiv {
+  background-color: #e7c8c8;
+  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.2);
+  padding: 10px;
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+.subtotalItemsDiv::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.subtotalItemsDiv::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Handle */
+.subtotalItemsDiv::-webkit-scrollbar-thumb {
+  background: #e7c8c8;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.subtotalItemsDiv::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.subtotalPricesDiv {
+  background-color: #e7c8c8;
+  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.2);
+  padding: 10px;
+  width: 200px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+}
+.addToCart {
+  height: 50px;
+  width: 50px;
+  border-radius: 5px;
+  transition: 0.3s;
+  background-color: #e7c8c8;
+  border: 2px solid;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.addToCart:hover {
+  opacity: 0.7;
+  cursor: pointer;
+  width: 55px;
+  height: 55px;
+}
+.cartGrid {
+  background-color: #eda3a3;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  gap: 10px;
+}
+.priceCartDiv {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+.ProductNameDiv h3 {
+  font-weight: 400;
+}
+.priceCartDiv h3 {
+  font-family: "Noto Sans";
+  font-style: italic;
+}
+.deleteCartItem {
+  border-radius: 5px;
+  background-color: #e7c8c8;
+  border: 0;
+  padding: 5px;
+  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.2);
+  transition: 0.5s;
+}
+.deleteCartItem:hover {
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: #e24f4f;
+}
+
+@media only screen and (max-width: 1150px) {
+  body {
+    margin-bottom: 120px;
+  }
+  .grid {
+    height: 800px;
+  }
+  .aLocal {
+    width: 160px;
+    height: 100%;
+  }
+  #gridLocal {
+    height: 500px;
+  }
+  .alocal:hover {
+    width: 100%;
+  }
+  .allInputs {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .bottomButtonsDiv {
+    flex-direction: column;
+  }
+  .fullTable {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .ItemsTable {
+    width: 100%;
+    padding: 5px;
+    overflow: auto;
+  }
+  .tableGrid {
+    width: 100%;
+    gap: 10px;
+  }
+  .itemCount {
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+  }
+  .addToCart {
+    width: 50px;
+    height: 100%;
+  }
+  .addToCart:hover {
+    width: 50px;
+    height: 100%;
+  }
+}
