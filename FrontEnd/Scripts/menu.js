@@ -146,7 +146,7 @@ fetch("http://localhost:8080/api/v1/produtos", optionsGET)
 
         fetch(
           "http://localhost:8080/api/v1/produtos/" + eachID.value,
-          optionsDELETE
+          optionsDELETE,
         )
           .then((response) => response)
           .then((data) => {
