@@ -1,4 +1,4 @@
-# StreetBite / SnackinBack – Copilot Instructions
+# StreetBite – Copilot Instructions
 
 ## Project Overview
 
@@ -26,7 +26,7 @@ All commands run from `Backend/sb_api/`.
 ./mvnw test
 
 # Run a single test class
-./mvnw test -Dtest=SnackinBackApplicationTests
+./mvnw test -Dtest=StreetBiteApplicationTests
 ```
 
 The app starts on **port 8080**. H2 console is available at `http://localhost:8080/h2-console` (datasource: `jdbc:h2:mem:testdb`, user: `sa`, no password).
@@ -40,7 +40,7 @@ Open any `.html` file with Live Server (VS Code extension). The backend CORS con
 ## Architecture
 
 ```
-Backend/sb_api/src/main/java/com/snackinback/sb_api/
+Backend/sb_api/src/main/java/com/streetbite/streetbite_api/
 ├── controller/     REST endpoints (@RestController, @RequestMapping("/api/v1/..."))
 ├── service/        Business logic; injected into controllers via @RequiredArgsConstructor
 ├── repository/     Spring Data JPA interfaces (extend JpaRepository)

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StreetBite</title>
+    <link rel="stylesheet" href="../Styles/streetBite.css" />
+    <link rel="stylesheet" href="../Styles/home.css" />
+    <link rel="stylesheet" href="../Styles/menu.css" />
+    <link rel="stylesheet" href="../Styles/requests.css" />
+    <link rel="stylesheet" href="../Styles/createNewOrder.css" />
+    <link rel="stylesheet" href="../Styles/settings.css" />
+    <script src="../Scripts/streetBite.js" defer></script>
+    <link
+      rel="shortcut icon"
+      href="../Imgs/images/favcon.png"
+      type="image/x-icon"
+    />
+  </head>
+  <body>
+    <section class="mainSection">
+      <aside class="sideBar">
+        <img class="logo" src="../Imgs/images/Snackin__Back-logo.png" alt="" />
+        <div class="buttonsNav">
+          <button class="navBarButtons" id="homeButton">
+            <img src="../Imgs/icons/homeIcon.svg" alt="" />Início
+          </button>
+          <button class="navBarButtons" id="menuButton">
+            <img src="../Imgs/icons/menuIcon.svg" alt="" />Cardápio
+          </button>
+          <button class="navBarButtons" id="ordersButton">
+            <img src="../Imgs/icons/orderIcon.svg" alt="" />Pedidos
+          </button>
+        </div>
+      </aside>
+      <div class="contentArea" id="contentArea"></div>
+    </section>
+
+    <!-- VLibras -->
+    <div vw class="enabled">
+      <div vw-access-button class="active"></div>
+      <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+      </div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+      new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+  </body>
+  
+</html>

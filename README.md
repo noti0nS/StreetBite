@@ -19,7 +19,7 @@ Facilitar a gestão de Food Trucks, oferecendo uma plataforma simples e eficient
 A modernização do processo de vendas do Foodtruck é necessária para aumentar a eficiência, reduzir erros e melhorar a gestão financeira. O atual sistema manual de registros é propenso a imprecisões e demora no atendimento, o que impacta negativamente a experiência do cliente e o controle de receitas. Com uma solução digital, será possível agilizar o atendimento, garantir registros mais precisos, facilitar a gestão de pagamentos e histórico de vendas, além de melhorar a experiência do cliente, promovendo o crescimento e a sustentabilidade do negócio.
 
 ## INSTRUÇÕES DE UTILIZAÇÃO:
-Entre no "SnackinBackApplication.java" e clique em Run (Rodar) no canto superior direito da tela
+Entre no "StreetBiteApplication.java" e clique em Run (Rodar) no canto superior direito da tela
 (É necessário o Java 21 para rodar a aplicação Backend)
 
 ![comousar](https://github.com/user-attachments/assets/1ba9cc6c-62fc-4fe9-80da-0649265aa109)

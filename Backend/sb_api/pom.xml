@@ -8,10 +8,10 @@
         <version>3.4.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.snackinback</groupId>
-    <artifactId>sb_api</artifactId>
+    <groupId>com.streetbite</groupId>
+    <artifactId>streetbite_api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>SnackinBack</name>
+    <name>StreetBite</name>
     <description>Demo project for Spring Boot</description>
     <url/>
     <licenses>
