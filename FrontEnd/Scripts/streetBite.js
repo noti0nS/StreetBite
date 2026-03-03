@@ -4,11 +4,11 @@ const menuButton = document.querySelector("#menuButton");
 const ordersButton = document.querySelector("#ordersButton");
 
 const pages = {
-  home:           { html: "Iframes/home.html",           script: "../Scripts/home.js",            module: false },
-  menu:           { html: "Iframes/menu.html",           script: "../Scripts/menu.js",            module: false },
-  requests:       { html: "Iframes/requests.html",       script: "../Scripts/requests.js",        module: false },
-  createNewOrder: { html: "Iframes/createNewOrder.html", script: "../Scripts/createNewOrder.js",  module: true  },
-  settings:       { html: "Iframes/settings.html",       script: null,                            module: false },
+  home:           { html: "Iframes/home.html",           script: "../Scripts/home.js",            module: false, css: "../Styles/home.css" },
+  menu:           { html: "Iframes/menu.html",           script: "../Scripts/menu.js",            module: false, css: "../Styles/menu.css" },
+  requests:       { html: "Iframes/requests.html",       script: "../Scripts/requests.js",        module: false, css: "../Styles/requests.css" },
+  createNewOrder: { html: "Iframes/createNewOrder.html", script: "../Scripts/createNewOrder.js",  module: true,  css: "../Styles/createNewOrder.css" },
+  settings:       { html: "Iframes/settings.html",       script: null,                            module: false, css: "../Styles/settings.css" },
 };
 
 // Map href filenames to page keys for internal link interception
@@ -32,6 +32,12 @@ async function loadPage(pageKey) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
   contentArea.innerHTML = doc.body.innerHTML;
+
+  // Swap page-specific CSS
+  const pageCSSLink = document.getElementById("pageCSS");
+  if (pageCSSLink && page.css) {
+    pageCSSLink.href = page.css;
+  }
 
   // Remove previous injected page script
   if (currentPageScript) {
