@@ -12,6 +12,7 @@
   --border: #DCE3EA;
   --danger: #C1121F;
   --success: #2A9D8F;
+  --button-color: #AF303B;
 }
 
 :root[data-theme="dark"] {
@@ -26,6 +27,7 @@
   --border: #314152;
   --danger: #FF5D6A;
   --success: #4CC9A6;
+  --button-color: #EE646E;
 }
 
 .main,
@@ -64,7 +66,7 @@ h6 {
   font-weight: 400;
 }
 .main nav .createOrder {
-  background-color: var(--primary);
+  background-color: var(--button-color);
   border-radius: 5px;
   width: 160px;
   border: 0;
