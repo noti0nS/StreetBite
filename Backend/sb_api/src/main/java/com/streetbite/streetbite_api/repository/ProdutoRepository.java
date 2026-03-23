@@ -7,5 +7,5 @@ import com.streetbite.streetbite_api.model.Produto;
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
-    
+	boolean existsByNome(String nome);
 }

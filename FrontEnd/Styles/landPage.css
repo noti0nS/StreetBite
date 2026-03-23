@@ -1,12 +1,49 @@
-@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@100..900&display=swap");
+
+:root {
+  --primary: #E63946;
+  --secondary: #1D3557;
+  --background: #F8F9FA;
+  --card: #FFFFFF;
+  --text: #212529;
+  --text-light: #6C757D;
+  --secondary-soft: #E9EEF5;
+  --primary-soft: #FDECEE;
+  --border: #DCE3EA;
+  --danger: #C1121F;
+  --success: #2A9D8F;
+}
+
+:root[data-theme="dark"] {
+  --primary: #E63946;
+  --secondary: #8FB3D9;
+  --background: #10151C;
+  --card: #1A222D;
+  --text: #E9ECEF;
+  --text-light: #AEB8C2;
+  --secondary-soft: #263243;
+  --primary-soft: #3A2327;
+  --border: #314152;
+  --danger: #FF5D6A;
+  --success: #4CC9A6;
+}
 
 * {
   margin: 0;
   padding: 0;
-  font-family: "Ubuntu";
+  font-family: "Inter", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppin", "Poppins", sans-serif;
 }
 .page-center {
-  background-color: #f6f6f6;
+  background-color: var(--background);
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -36,7 +73,7 @@
 .button-seeMore {
   width: 20vh;
   height: 3vh;
-  background-color: #eda3a3;
+  background-color: var(--primary);
   border-radius: 5px;
   border: 0;
   box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.1);
@@ -49,18 +86,17 @@
   padding: 15px;
   font-size: 1.5vh;
   font-weight: 400;
+  color: var(--card);
   text-decoration: none;
 }
 .button-seeMore:hover {
-  opacity: 0.8;
   cursor: pointer;
+  background-color: var(--secondary-soft);
+  color: var(--secondary);
 }
-.button-seeMore button {
-  border: 0;
-  background-color: transparent;
-}
-.button-seeMore button:hover {
-  cursor: pointer;
+.button-seeMore:focus-visible {
+  outline: 3px solid var(--secondary);
+  outline-offset: 2px;
 }
 .logo-all {
   display: flex;
@@ -87,6 +123,11 @@ p {
   font-size: 1.5vh;
   transition: 0.3s;
 }
+
+h1,
+p {
+  color: var(--text);
+}
 .img-section {
   width: 50%;
 }
@@ -95,3 +136,14 @@ p {
   height: 100%;
   object-fit: cover;
 }
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+}
+
+:where(button, a, [role="button"], input, select, textarea):focus-visible {
+  outline: 3px solid var(--secondary);
+  outline-offset: 2px;
+}
+

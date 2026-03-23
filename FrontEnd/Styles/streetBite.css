@@ -1,12 +1,50 @@
-@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@100..900&display=swap");
+
+:root {
+  --primary: #E63946;
+  --secondary: #1D3557;
+  --background: #F8F9FA;
+  --card: #FFFFFF;
+  --text: #212529;
+  --text-light: #6C757D;
+  --secondary-soft: #E9EEF5;
+  --primary-soft: #FDECEE;
+  --border: #DCE3EA;
+  --danger: #C1121F;
+  --success: #2A9D8F;
+}
+
+:root[data-theme="dark"] {
+  --primary: #E63946;
+  --secondary: #8FB3D9;
+  --background: #10151C;
+  --card: #1A222D;
+  --text: #E9ECEF;
+  --text-light: #AEB8C2;
+  --secondary-soft: #263243;
+  --primary-soft: #3A2327;
+  --border: #314152;
+  --danger: #FF5D6A;
+  --success: #4CC9A6;
+}
 
 * {
   padding: 0;
   margin: 0;
-  font-family: "Ubuntu";
+  font-family: "Inter", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppin", "Poppins", sans-serif;
 }
 body {
+  background-color: var(--background);
+  color: var(--text);
   overflow: hidden;
 }
 .logo {
@@ -22,17 +60,19 @@ body {
 .sideBar {
   display: flex;
   flex-direction: column;
-  width: 350px;
-  background-color: #ffffff;
+  width: 400px;
+  background-color: var(--card);
   height: 100vh;
   gap: 10px;
   align-items: center;
-  border-right: 1px solid rgb(204, 203, 203);
+  border-right: 1px solid var(--border);
   transition: 0.5s all;
 }
 .buttonsNav {
   width: 90%;
   margin: 10px;
+  padding: 0 12px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -41,8 +81,8 @@ body {
 
 .navBarButtons {
   width: 100%;
-  height: 50px;
-  background-color: #eda3a3;
+  height: 44px;
+  background-color: var(--primary);
   border-radius: 5px;
   border: 0;
   box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.1);
@@ -51,18 +91,60 @@ body {
   flex-direction: row;
   justify-content: left;
   align-items: center;
-  gap: 10px;
-  padding: 15px;
-  font-size: 15px;
+  gap: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
   font-weight: 400;
+  color: var(--card);
+  text-decoration: none;
 }
-.navBarButtons img {
-  height: 20px;
-  width: 20px;
+
+.navIcon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  background-color: currentColor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.homeIcon {
+  mask-image: url("../Imgs/icons/homeIcon.svg");
+  -webkit-mask-image: url("../Imgs/icons/homeIcon.svg");
+}
+
+.menuIcon {
+  mask-image: url("../Imgs/icons/menuIcon.svg");
+  -webkit-mask-image: url("../Imgs/icons/menuIcon.svg");
+}
+
+.orderIcon {
+  mask-image: url("../Imgs/icons/orderIcon.svg");
+  -webkit-mask-image: url("../Imgs/icons/orderIcon.svg");
+}
+
+.settingsIcon {
+  mask-image: url("../Imgs/icons/settingsIcon.svg");
+  -webkit-mask-image: url("../Imgs/icons/settingsIcon.svg");
 }
 .navBarButtons:hover {
   cursor: pointer;
-  background-color: #e7c8c8;
+  background-color: var(--secondary-soft);
+  color: var(--secondary);
+}
+
+.navBarButtons.is-active {
+  background-color: var(--secondary-soft);
+  color: var(--secondary);
+}
+
+:where(button, [role="button"], input, select, textarea, a):focus-visible {
+  outline: 3px solid var(--secondary);
+  outline-offset: 2px;
 }
 
 .sideBar h1 {
@@ -78,6 +160,7 @@ body {
 @media only screen and (max-width: 1150px) {
   .sideBar {
     position: absolute;
+    z-index: 2;
     bottom: 0;
     left: 0;
     height: 100px;
@@ -93,9 +176,13 @@ body {
     justify-content: center;
   }
   .navBarButtons {
-    height: 80px;
+    height: 72px;
     width: 100%;
     display: flex;
     flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    font-size: 13px;
   }
 }
+

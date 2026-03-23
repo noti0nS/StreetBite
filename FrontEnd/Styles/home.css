@@ -1,3 +1,46 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@100..900&display=swap");
+
+:root {
+  --primary: #E63946;
+  --secondary: #1D3557;
+  --background: #F8F9FA;
+  --card: #FFFFFF;
+  --text: #212529;
+  --text-light: #6C757D;
+  --secondary-soft: #E9EEF5;
+  --primary-soft: #FDECEE;
+  --border: #DCE3EA;
+  --danger: #C1121F;
+  --success: #2A9D8F;
+}
+
+:root[data-theme="dark"] {
+  --primary: #E63946;
+  --secondary: #8FB3D9;
+  --background: #10151C;
+  --card: #1A222D;
+  --text: #E9ECEF;
+  --text-light: #AEB8C2;
+  --secondary-soft: #263243;
+  --primary-soft: #3A2327;
+  --border: #314152;
+  --danger: #FF5D6A;
+  --success: #4CC9A6;
+}
+
+* {
+  font-family: "Inter", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppin", "Poppins", sans-serif;
+}
+
 .main {
   display: flex;
   flex-direction: column;
@@ -35,13 +78,12 @@
   height: 200px;
 }
 .grid h3 {
-  font-style: italic;
-  font-family: "Noto Sans";
+  font-style: normal;
   font-weight: bold;
 }
 .grid {
   font-size: 25px;
-  background-color: #eda3a3;
+  background-color: var(--primary);
   width: 350px;
   height: 350px;
   border-radius: 5px;
@@ -51,13 +93,11 @@
   flex-direction: column;
   gap: 10px;
   transition: 0.3s;
+  color: var(--card);
 }
-.grid:hover {
-  width: 370px;
-  height: 370px;
-}
+
 .bottomPage {
-  background-color: #f8f8f8;
+  background-color: var(--background);
   height: 250px;
 }
 
@@ -66,13 +106,13 @@
 }
 .popularItems h1 {
   font-stretch: condensed;
-  font-style: italic;
+  font-style: normal;
   font-size: 40px;
   font-weight: 450;
 }
 .interactionsButton {
   width: 50%;
-  background-color: #eda3a3;
+  background-color: var(--primary);
   border-radius: 5px;
   border: 0;
   font-size: 15px;
@@ -83,19 +123,14 @@
   text-decoration: none;
   align-items: center;
   justify-content: center;
-}
-.interactionsButton button {
-  background-color: transparent;
-  border: 0;
+  color: var(--card);
+  text-decoration: none;
+  font-weight: 600;
 }
 .interactionsButton:hover {
-  width: 60%;
-  opacity: 0.7;
   cursor: pointer;
-}
-.interactionsButton button:hover {
-  
-  cursor: pointer;
+  background-color: var(--secondary-soft);
+  color: var(--secondary);
 }
 .topPageSection {
   display: flex;
@@ -108,79 +143,171 @@
   flex-direction: row;
 }
 
-.slider {
-  background-color: #eda3a3;
-  border-radius: 5px;
-  height: 350px;
-  padding: 5px;
-  display: flex;
-  flex-direction: row;
-}
-.sliderDesc {
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 2px;
-  font-weight: 500;
-  font-family: "Noto Sans";
-  font-style: italic;
-}
-
-.sliderTitle {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.burgerCarousel {
+  background-color: var(--primary);
+  border-radius: 8px;
+  padding: 20px;
+  color: var(--card);
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
+  gap: 14px;
   align-items: center;
-  gap: 10px;
-}
-.sliderTitle h1 {
-  font-style: italic;
+  height: 350px;
 }
 
-.sliderDesc::-webkit-scrollbar {
-  width: 5px;
+.carouselTrack {
+  position: relative;
+  min-height: 280px;
+  overflow: hidden;
 }
 
-/* Track */
-.sliderDesc::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
+.carouselSlide {
+  z-index: 1;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  gap: 50px;
+  align-items: center;
+  justify-items: center;
+  justify-content: center;
+  grid-template-columns: minmax(220px, 260px) minmax(280px, 540px);
+  opacity: 0;
+  transform: translateX(24px) scale(0.985);
+  transition: opacity 0.42s ease, transform 0.42s ease;
+  pointer-events: none;
 }
 
-/* Handle */
-.sliderDesc::-webkit-scrollbar-thumb {
-  background: #e7c8c8;
-  border-radius: 10px;
+.carouselSlide.active {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  pointer-events: auto;
+  z-index: 1;
 }
 
-/* Handle on hover */
-.sliderDesc::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.carouselSlide img {
+  width: 100%;
+  max-width: 260px;
+  height: 225px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.slideInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+ 
+  
+}
+
+.slideInfo h3 {
+  font-size: 34px;
+  line-height: 1.1;
+}
+
+.slideInfo p {
+  font-size: 19px;
+  line-height: 1.35;
+}
+
+.slidePrice {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.carouselControl {
+  border: 0;
+  border-radius: 6px;
+  background-color: var(--secondary-soft);
+  color: var(--secondary);
+  width: 56px;
+  height: 56px;
+  font-size: 35px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.carouselControl:hover {
+  background-color: var(--secondary-soft);
+  color: var(--secondary);
+}
+
+.carouselDots {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.carouselDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--card);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.25s ease, transform 0.2s ease;
+}
+
+.carouselDot.active {
+  background: var(--card);
+  transform: scale(1.15);
+}
+
+.carouselDot:hover {
+  background-color: var(--secondary-soft);
+  border-color: var(--secondary);
 }
 
 @media only screen and (max-width: 1150px) {
   .grid {
-    width: 150px;
-    height: 180px;
+    width: 200px;
+    height: 200px;
   }
   .grid img {
     width: 120px;
     height: 100px;
-  }
-
-  .grid:hover {
-    width: 200px;
-    height: 200px;
-  }
+  } 
   .contentArea {
     margin-bottom: 100px;
   }
   .sliderTitle img {
     width: 250px;
   }
-  .slider {
-    flex-direction: column;
-    height: 500px;
+  .burgerCarousel {
+    grid-template-columns: 44px 1fr 44px;
+    padding: 14px;
+    height: 400px;
   }
+  .carouselControl {
+    width: 44px;
+    height: 44px;
+    font-size: 26px;
+  }
+  .carouselSlide {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+  .carouselTrack {
+    min-height: 360px;
+  }
+  .carouselSlide img {
+    max-width: 220px;
+    height: 170px;
+  }
+  .slideInfo h3 {
+    font-size: 24px;
+  }
+  .slideInfo p {
+    font-size: 16px;
+  }
+ 
 }
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+}
+

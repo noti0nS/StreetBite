@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,17 +16,20 @@
   <body>
     <section class="mainSection">
       <aside class="sideBar">
-        <img class="logo" src="../Imgs/images/StreetBite-logo.png" alt="" />
+        <img class="logo" src="../Imgs/images/StreetBite-logo.png" alt="Logo StreetBite" />
         <div class="buttonsNav">
-          <button class="navBarButtons" id="homeButton">
-            <img src="../Imgs/icons/homeIcon.svg" alt="" />Início
-          </button>
-          <button class="navBarButtons" id="menuButton">
-            <img src="../Imgs/icons/menuIcon.svg" alt="" />Cardápio
-          </button>
-          <button class="navBarButtons" id="ordersButton">
-            <img src="../Imgs/icons/orderIcon.svg" alt="" />Pedidos
-          </button>
+          <a class="navBarButtons" id="homeButton" href="Iframes/home.html">
+            <span class="navIcon homeIcon" aria-hidden="true"></span>Início
+          </a>
+          <a class="navBarButtons" id="menuButton" href="Iframes/menu.html">
+            <span class="navIcon menuIcon" aria-hidden="true"></span>Cardápio
+          </a>
+          <a class="navBarButtons" id="ordersButton" href="Iframes/requests.html">
+            <span class="navIcon orderIcon" aria-hidden="true"></span>Pedidos
+          </a>
+          <a class="navBarButtons" id="settingsButton" href="Iframes/settings.html">
+            <span class="navIcon settingsIcon" aria-hidden="true"></span>Configurações
+          </a>
         </div>
       </aside>
       <div class="contentArea" id="contentArea"></div>
@@ -47,3 +50,4 @@
   </body>
   
 </html>
+

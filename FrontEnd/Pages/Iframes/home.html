@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,74 +13,76 @@
         <h2>Visão Geral</h2>
       </section>
       <section class="topPageSection">
-        <div class="slider">
-          <div class="sliderTitle">
-            <h1>Big SB</h1>
-            <img src="../Imgs/images/items/bigSB" alt="" />
+        <section class="burgerCarousel" id="burgerCarousel" aria-label="Carrossel de hamburgueres populares" tabindex="0">
+          <button class="carouselControl prev" type="button" aria-label="Hamburguer anterior">
+            &lsaquo;
+          </button>
+
+          <div class="carouselTrack">
+            <article class="carouselSlide active" data-slide="0">
+              <img src="../Imgs/images/items/bigSB" alt="Hamburguer Big SB" />
+              <div class="slideInfo">
+                <h3>Big SB</h3>
+                <p>Hamburguer artesanal com queijo, salada fresca e molho especial da casa.</p>
+                <span class="slidePrice">R$20.00</span>
+              </div>
+            </article>
+
+            <article class="carouselSlide" data-slide="1">
+              <img src="../Imgs/images/items/bigSBbacon" alt="Hamburguer Big SB Bacon" />
+              <div class="slideInfo">
+                <h3>Big SB Bacon</h3>
+                <p>Versão com bacon crocante e cheddar derretido para um sabor mais intenso.</p>
+                <span class="slidePrice">R$23.00</span>
+              </div>
+            </article>
+
+            <article class="carouselSlide" data-slide="2">
+              <img src="../Imgs/images/items/bigSBCheddar" alt="Hamburguer Big SB Cheddar" />
+              <div class="slideInfo">
+                <h3>Big SB Cheddar</h3>
+                <p>Pão artesanal, blend suculento e dupla camada de cheddar cremoso.</p>
+                <span class="slidePrice">R$25.00</span>
+              </div>
+            </article>
+
+            <article class="carouselSlide" data-slide="3">
+              <img src="../Imgs/images/items/cheeseClassic" alt="Hamburguer Classic SB" />
+              <div class="slideInfo">
+                <h3>Classic SB</h3>
+                <p>Opção clássica e equilibrada com queijo, carne grelhada e ingredientes frescos.</p>
+                <span class="slidePrice">R$12.00</span>
+              </div>
+            </article>
           </div>
-          <div class="sliderDesc">
-            <p>
-              O BIG SB é um hambúrguer artesanal que se destaca pela sua
-              combinação de ingredientes frescos e de alta qualidade. Feito com
-              carne moída na hora, o BIG SB é servido em um pão artesanal macio,
-              acompanhado de queijos gourmet, vegetais frescos e molhos caseiros
-              especiais. A carne é moldada manualmente e grelhada no ponto
-              perfeito, garantindo sabor e suculência a cada mordida. Com uma
-              receita que valoriza a criatividade e o sabor, o BIG SB oferece
-              uma experiência gastronômica única, ideal para quem busca um
-              hambúrguer diferenciado e delicioso.
-            </p>
-            <p>
-              Seus principais ingredientes incluem: 
-              <p>
-                Carne moída 100% angus,
-                grelhada no ponto perfeito Pão artesanal macio e levemente torrado
-              </p>
-              <p>
-                Queijo cheddar gourmet derretido Bacon crocante Alface fresca
-              </p>
-              <p>
-                Tomate fatiado Cebola caramelizada Molho especial da casa, que
-              traz um toque único de sabor
-              </p>
-              <p>
-                Com esses ingredientes, o BIG SB
-                proporciona uma experiência gastronômica deliciosa e equilibrada,
-                com texturas crocantes, cremosas e suculentas a cada mordida.
-              </p>
-              
-            </p>
-            <p>
-              Aqui está uma estimativa dos principais nutrientes e calorias:
-              <p>Calorias: Aproximadamente 700 a 900 kcal por unidade (dependendo
-                do tamanho e dos ingredientes específicos, como o tipo de queijo e
-                o molho utilizado). 
-              </p>
-              <p>Proteínas: Cerca de 40-50g, principalmente
-                  provenientes da carne de angus e do queijo cheddar. Gorduras:
-                  Aproximadamente 40-50g, incluindo gorduras saturadas (presentes no
-                  bacon e no queijo), o que contribui para o sabor e a textura
-                  suculenta.
-              </p>
-              <p>Carboidratos: Em torno de 40-50g, provenientes do pão
-                artesanal e dos vegetais como tomate e cebola.
-              </p> 
-              <p>Fibras: Cerca de
-                3-5g, dependendo dos vegetais usados, como alface e cebola. Sódio:
-                Pode variar bastante, mas geralmente entre 800-1200mg, devido ao
-                bacon, queijo e molho.
-              </p>
-            </p>
+
+          <button class="carouselControl next" type="button" aria-label="Próximo hamburguer">
+            &rsaquo;
+          </button>
+
+          <div class="carouselDots" role="tablist" aria-label="Selecionar hamburguer">
+            <button class="carouselDot active" type="button" data-slide="0" aria-label="Ver Big SB"></button>
+            <button class="carouselDot" type="button" data-slide="1" aria-label="Ver Big SB Bacon"></button>
+            <button class="carouselDot" type="button" data-slide="2" aria-label="Ver Big SB Cheddar"></button>
+            <button class="carouselDot" type="button" data-slide="3" aria-label="Ver Classic SB"></button>
           </div>
-        </div>
+        </section>
 
         <div class="buttonsTopPage">
-          <a class="interactionsButton" href="../Iframes/menu.html"
-            ><button>Criar novo Item</button></a
+          <a
+            class="interactionsButton"
+            href="../Iframes/menu.html"
+            aria-label="Ir para criação de novo item"
           >
-          <a class="interactionsButton" href="../Iframes/createNewOrder.html"
-            ><button>Criar novo Pedido</button></a
+            Criar novo Item
+          </a>
+          <a
+            class="interactionsButton"
+            href="../Iframes/requests.html"
+            aria-label="Ir para criação de novo pedido"
           >
+            Criar novo Pedido
+          </a>
         </div>
       </section>
 
@@ -88,25 +90,26 @@
       <section class="midPage">
         <div class="grid">
           <h2>Big SB</h2>
-          <img src="../Imgs/images/items/bigSB" alt="" />
+          <img src="../Imgs/images/items/bigSB" alt="Hamburguer Big SB" />
           <h3>R$20.00</h3>
         </div>
         <div class="grid">
           <h2>Big SB Bacon</h2>
-          <img src="../Imgs/images/items/bigSBbacon" alt="" />
+          <img src="../Imgs/images/items/bigSBbacon" alt="Hamburguer Big SB Bacon" />
           <h3>R$23.00</h3>
         </div>
         <div class="grid">
           <h2>Big SB Cheddar</h2>
-          <img src="../Imgs/images/items/bigSBCheddar" alt="" />
+          <img src="../Imgs/images/items/bigSBCheddar" alt="Hamburguer Big SB Cheddar" />
           <h3>R$25.00</h3>
         </div>
         <div class="grid">
           <h2>Classic SB</h2>
-          <img src="../Imgs/images/items/cheeseClassic" alt="" />
+          <img src="../Imgs/images/items/cheeseClassic" alt="Hamburguer Classic SB" />
           <h3>R$12.00</h3>
         </div>
       </section>
     </main>
   </body>
 </html>
+

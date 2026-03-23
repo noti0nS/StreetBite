@@ -1,3 +1,46 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@100..900&display=swap");
+
+:root {
+  --primary: #E63946;
+  --secondary: #1D3557;
+  --background: #F8F9FA;
+  --card: #FFFFFF;
+  --text: #212529;
+  --text-light: #6C757D;
+  --secondary-soft: #E9EEF5;
+  --primary-soft: #FDECEE;
+  --border: #DCE3EA;
+  --danger: #C1121F;
+  --success: #2A9D8F;
+}
+
+:root[data-theme="dark"] {
+  --primary: #E63946;
+  --secondary: #8FB3D9;
+  --background: #10151C;
+  --card: #1A222D;
+  --text: #E9ECEF;
+  --text-light: #AEB8C2;
+  --secondary-soft: #263243;
+  --primary-soft: #3A2327;
+  --border: #314152;
+  --danger: #FF5D6A;
+  --success: #4CC9A6;
+}
+
+* {
+  font-family: "Inter", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppin", "Poppins", sans-serif;
+}
+
 .main {
   display: flex;
   flex-direction: column;
@@ -28,7 +71,7 @@
 }
 
 .grid {
-  background-color: #f8f8f8;
+  background-color: var(--background);
   padding: 30px;
   display: flex;
   flex-direction: column;
@@ -38,10 +81,11 @@
 .grid input {
   width: 400px;
   height: 30px;
-  background-color: #eda3a3;
+  background-color: var(--primary);
   border: 0;
   border-radius: 5px;
   padding: 5px;
+  color: var(--card);
 }
 .grid nav {
   display: flex;
@@ -52,7 +96,7 @@
 .main button {
   width: 150px;
   height: 50px;
-  background-color: #eda3a3;
+  background-color: var(--primary);
   border-radius: 5px;
   border: 0;
   box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.1);
@@ -63,10 +107,12 @@
   padding: 15px;
   font-size: 15px;
   font-weight: 410;
+  color: var(--card);
 }
 .main button:hover {
   cursor: pointer;
-  background-color: #e7c8c8;
+  background-color: var(--secondary-soft);
+  color: var(--secondary);
 }
 #openingHoursGrid section {
   display: flex;
@@ -91,8 +137,7 @@
   gap: 10px;
 }
 .main h4 {
-  font-family: "Noto Sans";
-  font-style: italic;
+  font-style: normal;
   font-weight: 400;
 }
 .buttonsTimeDiv {
@@ -100,3 +145,30 @@
   display: flex;
   gap: 10px;
 }
+
+#themeGrid p {
+  color: var(--text-light);
+}
+
+.themeToggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+#themeLabel {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+#themeToggleButton {
+  min-width: 220px;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+}
+

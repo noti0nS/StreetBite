@@ -1,3 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@100..900&display=swap");
+
+:root {
+  --primary: #E63946;
+  --secondary: #1D3557;
+  --background: #F8F9FA;
+  --card: #FFFFFF;
+  --text: #212529;
+  --text-light: #6C757D;
+  --secondary-soft: #E9EEF5;
+  --primary-soft: #FDECEE;
+  --border: #DCE3EA;
+  --danger: #C1121F;
+  --success: #2A9D8F;
+}
+
+:root[data-theme="dark"] {
+  --primary: #E63946;
+  --secondary: #8FB3D9;
+  --background: #10151C;
+  --card: #1A222D;
+  --text: #E9ECEF;
+  --text-light: #AEB8C2;
+  --secondary-soft: #263243;
+  --primary-soft: #3A2327;
+  --border: #314152;
+  --danger: #FF5D6A;
+  --success: #4CC9A6;
+}
+
+.main,
+.main *,
+.wizardSection,
+.wizardSection * {
+  font-family: "Inter", sans-serif;
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppin", "Poppins", sans-serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+}
+
 .main {
   display: flex;
   flex-direction: column;
@@ -6,25 +58,58 @@
   margin-top: 50px;
   gap: 80px;
 }
+
 .main h1 {
   font-size: 30px;
 }
+
 .main h2 {
   font-size: 20px;
   font-weight: 400;
 }
+
 .labelSection {
   display: flex;
   flex-direction: row;
 }
+
 .labelSection div {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
+
 .labelSection nav {
   margin-left: auto;
 }
+
+.main nav {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.main nav button {
+  background-color: var(--primary);
+  border-radius: 5px;
+  width: 160px;
+  border: 0;
+  height: 48px;
+  color: var(--card);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  padding: 0 16px;
+  box-sizing: border-box;
+  transition: background-color 0.24s ease, transform 0.2s ease, box-shadow 0.24s ease;
+}
+
+.main nav button:hover {
+  cursor: pointer;
+  background-color: var(--secondary-soft);
+  color: var(--secondary);
+}
+
 .gridSection {
   width: 100%;
   gap: 60px;
@@ -33,18 +118,22 @@
   flex-direction: row;
   justify-content: space-between;
 }
+
 .grid {
   display: flex;
   flex-direction: column;
-  height: 400px;
+  height: 450px;
   width: 350px;
-  background-color: #eda3a3;
+  background-color: var(--primary);
   align-items: center;
   padding: 20px;
   gap: 30px;
   border-radius: 10px;
   transition: 0.3s;
+  color: var(--card);
 }
+
+
 
 @keyframes gridAnim {
   from {
@@ -54,218 +143,314 @@
     scale: 1;
   }
 }
-@keyframes gridReverseAnim {
-  from {
-    scale: 1;
-  }
-  to {
-    scale: 0;
-  }
-}
-.grid:hover {
-  width: 370px;
-  height: 410px;
-}
+
 .editButton {
-  background-color: #e0dede;
+  background-color: var(--card);
   border: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 10px rgb(0 0 0 / 20%);
   border-radius: 100%;
   padding: 5px;
   transition: 0.3s;
 }
+
 .editButton:hover {
-  opacity: 0.7;
   cursor: pointer;
+  background-color: var(--secondary-soft);
+  color: var(--secondary);
 }
+
 .itemImage {
   border-radius: 10px;
   height: 170px;
   width: 250px;
 }
+
 .main img {
   object-fit: fill;
   width: 100%;
   height: 100%;
   border-radius: 5px;
 }
-.main nav {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-}
-.main nav button {
-  background-color: #eda3a3;
-  border-radius: 5px;
-  width: 150px;
-  border: 0px;
-  height: 50px;
-}
-.main nav button:hover {
-  cursor: pointer;
-  background-color: #e7c8c8;
-}
-.modalSection {
+
+.wizardSection {
   display: none;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0, 0.2);
   position: fixed;
-  z-index: 2;
-  justify-content: center;
+  inset: 0;
+  z-index: 10;
   align-items: center;
+  justify-content: center;
+  background: rgb(16 21 28 / 55%);
+  padding: 24px;
+  overflow-y: auto;
 }
-.modalContent {
-  border-radius: 10px;
-  background-color: #e0dede;
-  height: 500px;
-  width: 650px;
-  padding: 25px;
-  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.2);
-}
-.labelDiv {
+
+.wizardSection.is-open {
   display: flex;
-  flex-direction: row;
+}
+
+.wizardContainer {
+  width: min(980px, 100%);
+  min-height: 540px;
+  max-height: calc(100vh - 48px);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 18px 48px rgb(0 0 0 / 25%);
+  display: grid;
+  grid-template-columns: 290px 1fr;
+}
+
+.wizardVisual {
+  background: linear-gradient(165deg, var(--secondary) 0%, var(--primary) 100%);
+  color: var(--card);
+  padding: 30px 24px;
+  display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  margin-bottom: 50px;
 }
 
-.labelDiv button {
-  background-color: transparent;
-  border: 0;
-  font-size: larger;
-  font-weight: bold;
+.wizardVisualTitle {
+  font-size: 20px;
+  margin-bottom: 12px;
 }
-.labelDiv button:hover {
-  opacity: 0.8;
-  cursor: pointer;
+
+.wizardVisual p {
+  line-height: 1.45;
 }
-.mainItemDiv input {
-  border-radius: 5px;
+
+.wizardVisualStep {
+  border-top: 1px solid rgb(255 255 255 / 30%);
+  padding-top: 14px;
+  opacity: 0.85;
+}
+
+.wizardMain {
+  display: flex;
+  flex-direction: column;
+  padding: 26px 28px;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+.wizardHeader {
+  margin-bottom: 18px;
+}
+
+.wizardTitle {
+  font-size: 24px;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.wizardSubtitle {
+  color: var(--text-light);
+}
+
+.wizardStep {
+  flex: 1;
+}
+
+.wizardStep.hidden,
+.hidden {
+  display: none;
+}
+
+.wizardStepTitle {
+  font-size: 18px;
+  margin-bottom: 14px;
+  color: var(--text);
+}
+
+.wizardFieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+  min-width: 0;
+}
+
+.wizardFieldLabel {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.wizardField,
+.wizardTextarea {
+  width: 100%;
+  max-width: 100%;
+  min-height: 44px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--text);
+  padding: 10px 12px;
   font-size: 15px;
-  padding: 5px;
-  width: 100px;
-  height: 40px;
-  background-color: #eda3a3;
-  border: 0;
-  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.1);
 }
 
-.mainItemDiv select {
-  border-radius: 5px;
-  width: 200px;
-  height: 50px;
-  font-size: medium;
-  background-color: #eda3a3;
-  border: 0;
-  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.1);
+.wizardTextarea {
+  min-height: 112px;
+  resize: vertical;
 }
+
+.wizardGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
 .imgDiv {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  justify-content: center;
-  align-items: center;
+  gap: 8px;
+  align-items: flex-start;
 }
+
 .imgDivModal {
-  width: 200px;
+  width: 240px;
   height: 150px;
-  background-color: #eda3a3;
-  border-radius: 5px;
+  background: var(--secondary-soft);
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+  overflow: hidden;
 }
-.mainItemDiv .hidden {
-  display: none;
+
+.imgDivModal img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-.mainItemDiv .inputImg {
-  background-color: #eda3a3;
-  padding: 5px;
-  width: 190px;
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
+
+.inputImg {
+  background: var(--primary);
+  color: var(--card);
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: inline-flex;
   align-items: center;
-  transition: 0.3s;
-}
-
-.mainItemDiv .inputImg:hover {
-  opacity: 0.7;
-  cursor: pointer;
-}
-
-.mainItemDiv {
-  display: flex;
-  flex-direction: row;
   justify-content: center;
-  gap: 30px;
-}
-.mainItemDiv .inputDescription {
-  width: 430px;
-  background-color: #e1b6b6;
+  transition: background-color 0.24s ease, color 0.24s ease;
 }
 
-.inputsDiv {
-  display: flex;
-  gap: 10px;
-  width: 500px;
-  justify-content: left;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-.eachInput {
-  gap: 10px;
-  display: flex;
-  flex-direction: column;
-}
-.bottomModalDiv {
-  display: flex;
-  gap: 10px;
-  margin-top: 200px;
-  justify-content: space-around;
-}
-.bottomModalDiv button {
-  background-color: #eda3a3;
-  width: 300px;
-  height: 50px;
-  border: 0;
-  border-radius: 5px;
-  transition: 0.3s;
-}
-.bottomModalDiv button:hover {
+.inputImg:hover {
   cursor: pointer;
-  background-color: #ecbcbc;
+  background: var(--secondary-soft);
+  color: var(--secondary);
+}
+
+.wizardFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.wizardButton {
+  min-width: 130px;
+  height: 44px;
+  border-radius: 8px;
+  border: 0;
+  padding: 0 14px;
+  font-weight: 600;
+  transition: background-color 0.24s ease, color 0.24s ease;
+}
+
+.wizardButton:hover {
+  cursor: pointer;
+}
+
+.wizardButton.is-primary {
+  background: var(--primary);
+  color: var(--card);
+}
+
+.wizardButton.is-primary:hover {
+  background: var(--secondary-soft);
+  color: var(--secondary);
+}
+
+.wizardButton.is-secondary {
+  background: var(--secondary-soft);
+  color: var(--secondary);
+}
+
+.wizardButton.is-secondary:hover {
+  background: var(--border);
+}
+
+.wizardButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @media only screen and (max-width: 1150px) {
   .contentArea {
     margin-bottom: 150px;
   }
+
   .grid {
     width: 100%;
     height: 380px;
   }
+
   .itemImage {
     width: 200px;
     height: 150px;
   }
-  .modalContent {
-    width: 90%;
-    height: 95%;
-  }
-  .mainItemDiv {
-    flex-direction: column;
 
-    align-items: center;
-    scale: 0.8;
+  .wizardContainer {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    max-height: calc(100vh - 24px);
   }
-  .inputsDiv {
-    justify-content: center;
+
+  .wizardVisual {
+    min-height: 180px;
   }
-  .bottomModalDiv {
-    margin-top: 50px;
+
+  .wizardMain {
+    padding: 20px;
+  }
+
+  .wizardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .wizardFooter {
+    flex-wrap: wrap;
+    justify-content: stretch;
+  }
+
+  .wizardButton {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .imgDivModal {
+    width: 100%;
+    max-width: 280px;
   }
 }
+
+@media only screen and (max-width: 640px) {
+  .wizardSection {
+    padding: 10px;
+  }
+
+  .wizardMain {
+    padding: 16px;
+  }
+
+  .wizardTitle {
+    font-size: 22px;
+  }
+
+  .wizardSubtitle {
+    font-size: 14px;
+  }
+}
+
