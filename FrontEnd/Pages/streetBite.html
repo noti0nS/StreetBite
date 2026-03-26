@@ -15,24 +15,27 @@
   </head>
   <body>
     <section class="mainSection">
-      <aside class="sideBar">
+      <aside class="sideBar" aria-label="Barra lateral de navegação">
         <img class="logo" src="../Imgs/images/StreetBite-logo.png" alt="Logo StreetBite" />
-        <div class="buttonsNav">
-          <a class="navBarButtons" id="homeButton" href="Iframes/home.html">
+        <div class="buttonsNav" aria-label="Navegação principal">
+          <a class="navBarButtons" id="homeButton" href="Iframes/home.html" aria-label="Abrir página Início">
             <span class="navIcon homeIcon" aria-hidden="true"></span>Início
           </a>
-          <a class="navBarButtons" id="menuButton" href="Iframes/menu.html">
+          <a class="navBarButtons" id="menuButton" href="Iframes/menu.html" aria-label="Abrir página Cardápio">
             <span class="navIcon menuIcon" aria-hidden="true"></span>Cardápio
           </a>
-          <a class="navBarButtons" id="ordersButton" href="Iframes/requests.html">
+          <a class="navBarButtons" id="ordersButton" href="Iframes/requests.html" aria-label="Abrir página Pedidos">
             <span class="navIcon orderIcon" aria-hidden="true"></span>Pedidos
           </a>
-          <a class="navBarButtons" id="settingsButton" href="Iframes/settings.html">
+          <a class="navBarButtons" id="settingsButton" href="Iframes/settings.html" aria-label="Abrir página Configurações">
             <span class="navIcon settingsIcon" aria-hidden="true"></span>Configurações
           </a>
         </div>
+        <button class="themeIconButton" id="themeToggleSidebarButton" type="button" aria-label="Ativar modo escuro" aria-pressed="false" title="Alternar tema">
+          <span id="themeToggleIcon" class="themeIconGlyph" aria-hidden="true">☾</span>
+        </button>
       </aside>
-      <div class="contentArea" id="contentArea"></div>
+      <div class="contentArea" id="contentArea" aria-live="polite"></div>
     </section>
 
     <!-- VLibras -->

@@ -15,7 +15,7 @@
           <h2>Lista de Itens contidos no Cardápio</h2>
         </div>
         <nav>
-          <button class="createItem" type="button">Criar Novo Item</button>
+          <button class="createItem" type="button" aria-label="Criar novo item do cardápio">Criar Novo Item</button>
         </nav>
       </section>
       <section class="gridSection"></section>
@@ -44,12 +44,12 @@
                   <div>
                     <div class="wizardFieldGroup">
                       <label class="wizardFieldLabel" for="inputName">Nome</label>
-                      <input class="wizardField" type="text" id="inputName" />
+                      <input class="wizardField" type="text" id="inputName" aria-label="Nome do item" />
                     </div>
 
                     <div class="wizardFieldGroup">
                       <label class="wizardFieldLabel" for="selectCategory">Categoria</label>
-                      <select class="wizardField" id="selectCategory">
+                      <select class="wizardField" id="selectCategory" aria-label="Categoria do item">
                         <option value="LANCHE">Lanche</option>
                         <option value="ACOMPANHAMENTO">Acompanhamento</option>
                         <option value="BEBIDA">Bebida</option>
@@ -59,12 +59,12 @@
 
                     <div class="wizardFieldGroup">
                       <label class="wizardFieldLabel" for="inputPrice">Preço</label>
-                      <input class="wizardField" type="number" id="inputPrice" />
+                      <input class="wizardField" type="number" id="inputPrice" aria-label="Preço do item" />
                     </div>
 
                     <div class="wizardFieldGroup">
                       <label class="wizardFieldLabel" for="inputDesc">Descrição</label>
-                      <textarea class="wizardTextarea" id="inputDesc" placeholder="Descrição do item"></textarea>
+                      <textarea class="wizardTextarea" id="inputDesc" placeholder="Descrição do item" aria-label="Descrição do item"></textarea>
                     </div>
                   </div>
 
@@ -73,7 +73,7 @@
                       <div class="imgDivModal">
                         <img id="imageImg" src="" alt="Pré-visualização do item" />
                       </div>
-                      <input class="hidden" type="file" id="files" accept="image/*" />
+                      <input class="hidden" type="file" id="files" accept="image/*" aria-label="Selecionar imagem do item" />
                       <label for="files" class="inputImg">Selecionar imagem</label>
                     </div>
                   </div>
@@ -82,8 +82,8 @@
             </section>
 
             <footer class="wizardFooter">
-              <button class="wizardButton is-primary" id="wizardNext" type="button">Criar Item</button>
-              <button class="wizardButton is-secondary" id="wizardCancel" type="button">Cancelar</button>
+              <button class="wizardButton is-primary" id="wizardNext" type="button" aria-label="Criar item do cardápio">Criar Item</button>
+              <button class="wizardButton is-secondary" id="wizardCancel" type="button" aria-label="Cancelar criação de item">Cancelar</button>
             </footer>
           </div>
         </div>

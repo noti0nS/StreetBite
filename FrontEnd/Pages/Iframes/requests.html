@@ -15,7 +15,7 @@
           <h2>Lista de Pedidos</h2>
         </div>
         <nav>
-          <button class="createOrder" id="openOrderWizard" type="button">
+          <button class="createOrder" id="openOrderWizard" type="button" aria-label="Criar novo pedido">
             Criar novo Pedido
           </button>
         </nav>
@@ -44,7 +44,7 @@
                 <h3 class="wizardStepTitle">Passo 1: Seleção de Local</h3>
                 <div class="wizardFieldGroup">
                   <label class="wizardFieldLabel" for="orderType">Tipo de atendimento</label>
-                  <select class="wizardField" id="orderType">
+                  <select class="wizardField" id="orderType" aria-label="Tipo de atendimento">
                     <option value="" hidden>--- Selecione ---</option>
                     <option value="delivery">Delivery</option>
                     <option value="retirada">Retirada/Comer no Local</option>
@@ -59,25 +59,25 @@
                   <div>
                     <div class="wizardFieldGroup">
                       <label class="wizardFieldLabel" for="orderClientName">Nome do cliente</label>
-                      <input class="wizardField" id="orderClientName" type="text" />
+                      <input class="wizardField" id="orderClientName" type="text" aria-label="Nome do cliente" />
                     </div>
 
                     <div class="wizardFieldGroup">
                       <label class="wizardFieldLabel" for="orderPhone">Telefone</label>
-                      <input class="wizardField" id="orderPhone" type="text" />
+                      <input class="wizardField" id="orderPhone" type="text" aria-label="Telefone do cliente" />
                     </div>
 
                     <div class="wizardFieldGroup" id="addressGroup">
                       <label class="wizardFieldLabel" for="orderCep">CEP</label>
-                      <input class="wizardField" id="orderCep" type="text" />
-                      <input class="wizardField" id="orderDistrict" type="text" placeholder="Bairro" disabled />
-                      <input class="wizardField" id="orderStreet" type="text" placeholder="Rua" disabled />
-                      <input class="wizardField" id="orderNumber" type="text" placeholder="Número" />
+                      <input class="wizardField" id="orderCep" type="text" aria-label="CEP" />
+                      <input class="wizardField" id="orderDistrict" type="text" placeholder="Bairro" disabled aria-label="Bairro" />
+                      <input class="wizardField" id="orderStreet" type="text" placeholder="Rua" disabled aria-label="Rua" />
+                      <input class="wizardField" id="orderNumber" type="text" placeholder="Número" aria-label="Número do endereço" />
                     </div>
 
                     <div class="wizardFieldGroup">
                       <label class="wizardFieldLabel" for="orderPayment">Método de pagamento</label>
-                      <select class="wizardField" id="orderPayment">
+                      <select class="wizardField" id="orderPayment" aria-label="Método de pagamento">
                         <option value="" hidden>--- Selecione ---</option>
                         <option value="PIX">PIX</option>
                         <option value="CRÉDITO">Crédito</option>
@@ -90,18 +90,18 @@
                   <div>
                     <div class="wizardFieldGroup">
                       <label class="wizardFieldLabel" for="orderProduct">Item do cardápio</label>
-                      <select class="wizardField" id="orderProduct">
+                      <select class="wizardField" id="orderProduct" aria-label="Item do cardápio">
                         <option value="" hidden>--- Selecione ---</option>
                       </select>
                     </div>
 
                     <div class="wizardFieldGroup">
                       <label class="wizardFieldLabel" for="orderQuantity">Quantidade</label>
-                      <input class="wizardField" id="orderQuantity" type="number" min="1" value="1" />
+                      <input class="wizardField" id="orderQuantity" type="number" min="1" value="1" aria-label="Quantidade do item" />
                     </div>
 
                     <div class="wizardFieldGroup">
-                      <button class="wizardButton is-secondary" id="addOrderItem" type="button">Adicionar item</button>
+                      <button class="wizardButton is-secondary" id="addOrderItem" type="button" aria-label="Adicionar item ao pedido">Adicionar item</button>
                     </div>
 
                     <div class="wizardFieldGroup">
@@ -115,9 +115,9 @@
             </section>
 
             <footer class="wizardFooter">
-              <button class="wizardButton is-secondary" id="orderWizardBack" type="button">Voltar</button>
-              <button class="wizardButton is-primary" id="orderWizardNext" type="button">Próximo &gt;</button>
-              <button class="wizardButton is-secondary" id="orderWizardCancel" type="button">Cancelar</button>
+              <button class="wizardButton is-secondary" id="orderWizardBack" type="button" aria-label="Voltar para o passo anterior">Voltar</button>
+              <button class="wizardButton is-primary" id="orderWizardNext" type="button" aria-label="Ir para o próximo passo">Próximo &gt;</button>
+              <button class="wizardButton is-secondary" id="orderWizardCancel" type="button" aria-label="Cancelar criação do pedido">Cancelar</button>
             </footer>
           </div>
         </div>

@@ -220,8 +220,8 @@ h6 {
 .carouselControl {
   border: 0;
   border-radius: 6px;
-  background-color: var(--secondary-soft);
-  color: var(--secondary);
+  background-color: transparent;
+  color: var(--background);
   width: 56px;
   height: 56px;
   font-size: 35px;

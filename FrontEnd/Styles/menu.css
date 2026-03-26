@@ -196,7 +196,7 @@ body {
 .wizardContainer {
   width: min(980px, 100%);
   min-height: 540px;
-  max-height: calc(100vh - 48px);
+  max-height: min(100vh - 48px, 90vh);
   border-radius: 16px;
   overflow: hidden;
   background: var(--card);
@@ -236,6 +236,14 @@ body {
   padding: 26px 28px;
   min-width: 0;
   overflow-y: auto;
+  max-height: calc(100vh - 200px);
+}
+
+@media (max-width: 768px) {
+  .wizardMain {
+    padding: 20px 16px;
+    max-height: calc(100vh - 150px);
+  }
 }
 
 .wizardHeader {

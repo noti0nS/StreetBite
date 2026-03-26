@@ -69,6 +69,7 @@ body {
   align-items: center;
   border-right: 1px solid var(--border);
   transition: 0.5s all;
+  position: relative;
 }
 .buttonsNav {
   width: 90%;
@@ -133,6 +134,35 @@ body {
   mask-image: url("../Imgs/icons/settingsIcon.svg");
   -webkit-mask-image: url("../Imgs/icons/settingsIcon.svg");
 }
+
+.themeIconButton {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  border: 0;
+  background-color: var(--button-color);
+  color: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.1);
+  transition: 0.3s all;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.themeIconButton:hover {
+  background-color: var(--secondary-soft);
+  color: var(--secondary);
+}
+
+.themeIconGlyph {
+  font-size: 20px;
+  line-height: 1;
+}
 .navBarButtons:hover {
   cursor: pointer;
   background-color: var(--secondary-soft);
@@ -185,6 +215,14 @@ body {
     gap: 6px;
     padding: 8px;
     font-size: 13px;
+  }
+
+  .themeIconButton {
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+    bottom: 15px;
+    right: 15px;
   }
 }
 

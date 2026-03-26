@@ -82,6 +82,13 @@
     wizardNext.textContent = "Criar Item";
   }
 
+  // Close wizard when clicking outside (on the overlay)
+  wizardSection.addEventListener("click", (e) => {
+    if (e.target === wizardSection) {
+      closeWizard();
+    }
+  });
+
   async function saveItem() {
     const nome = inputName.value.trim();
     const preco = inputPrice.value;
@@ -124,6 +131,20 @@
   createItemButton.addEventListener("click", () => openWizard("create"));
 
   wizardCancel.addEventListener("click", closeWizard);
+
+  // Close wizard when clicking outside (on the overlay)
+  wizardSection.addEventListener("click", (e) => {
+    if (e.target === wizardSection) {
+      closeWizard();
+    }
+  });
+
+  // Also allow Escape key to close
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && wizardSection.classList.contains("is-open")) {
+      closeWizard();
+    }
+  });
 
   wizardNext.addEventListener("click", saveItem);
 

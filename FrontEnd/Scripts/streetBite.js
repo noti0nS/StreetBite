@@ -3,6 +3,8 @@ const homeButton = document.querySelector("#homeButton");
 const menuButton = document.querySelector("#menuButton");
 const ordersButton = document.querySelector("#ordersButton");
 const settingsButton = document.querySelector("#settingsButton");
+const themeToggleSidebarButton = document.querySelector("#themeToggleSidebarButton");
+const themeToggleIcon = document.querySelector("#themeToggleIcon");
 
 const THEME_STORAGE_KEY = "streetbite-theme";
 
@@ -10,6 +12,7 @@ function applyTheme(theme) {
   const normalizedTheme = theme === "dark" ? "dark" : "light";
   document.documentElement.setAttribute("data-theme", normalizedTheme);
   localStorage.setItem(THEME_STORAGE_KEY, normalizedTheme);
+  updateThemeControls(normalizedTheme);
 }
 
 function getCurrentTheme() {
@@ -20,6 +23,27 @@ function toggleTheme() {
   const nextTheme = getCurrentTheme() === "dark" ? "light" : "dark";
   applyTheme(nextTheme);
   return nextTheme;
+}
+
+function updateThemeControls(theme) {
+  const isDark = theme === "dark";
+
+  if (themeToggleSidebarButton) {
+    themeToggleSidebarButton.setAttribute("aria-pressed", String(isDark));
+    themeToggleSidebarButton.setAttribute(
+      "aria-label",
+      isDark ? "Voltar para modo claro" : "Ativar modo escuro"
+    );
+  }
+
+  if (themeToggleIcon) {
+    themeToggleIcon.textContent = isDark ? "☀" : "☾";
+  }
+
+  const themeLabel = document.querySelector("#themeLabel");
+  if (themeLabel) {
+    themeLabel.textContent = `Tema atual: ${isDark ? "Escuro" : "Claro"}`;
+  }
 }
 
 window.applyTheme = applyTheme;
@@ -150,6 +174,12 @@ settingsButton.addEventListener("click", (e) => {
   e.preventDefault();
   loadPage("settings");
 });
+
+if (themeToggleSidebarButton) {
+  themeToggleSidebarButton.addEventListener("click", () => {
+    toggleTheme();
+  });
+}
 
 // Load home page on startup
 loadPage("home");
