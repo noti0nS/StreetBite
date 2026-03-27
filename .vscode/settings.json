@@ -1,0 +1,13 @@
+{
+  "chat.useAgentsMdFile": true,
+  "chat.useCustomizationsInParentRepositories": true,
+  "chat.agentSkillsLocations": {
+    ".agents/skills": true
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "all",
+  "prettier.tabWidth": 2,
+  "prettier.semi": true
+}
