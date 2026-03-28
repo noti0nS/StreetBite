@@ -1,3 +1,5 @@
 <Solution>
   <Project Path="StreetBite.Api/StreetBite.Api.csproj" />
+  <Project Path="StreetBite.Core/StreetBite.Core.csproj" />
+  <Project Path="StreetBite.Infra/StreetBite.Infra.csproj" />
 </Solution>
