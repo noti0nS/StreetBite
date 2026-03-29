@@ -18,7 +18,7 @@ services:
 
   api:
     build:
-      context: .
+      context: ./Api/src
       dockerfile: StreetBite.Api/Dockerfile
     image: streetbite-api
     container_name: streetbite-api
@@ -29,6 +29,18 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+  frontend:
+    build:
+      context: ./FrontEnd
+      dockerfile: Dockerfile
+    image: streetbite-frontend
+    container_name: streetbite-frontend
+    ports:
+      - '3000:3000'
+    depends_on:
+      api:
+        condition: service_started
 
 volumes:
   streetbite_db_data:
