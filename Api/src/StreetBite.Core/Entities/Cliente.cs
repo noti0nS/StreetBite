@@ -8,5 +8,5 @@ public sealed class Cliente : BaseEntity
 
     public string? Telefone { get; set; }
 
-    public ICollection<Endereco> Enderecos { get; set; } = [];
+    public List<Endereco> Enderecos { get; set; } = [];
 }

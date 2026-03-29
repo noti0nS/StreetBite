@@ -4,7 +4,6 @@ namespace StreetBite.Core.Entities;
 
 public sealed class Comanda : BaseEntity
 {
-    public ICollection<Item> Itens { get; set; } = [];
 
     public Cliente? Cliente { get; set; }
 
@@ -15,4 +14,5 @@ public sealed class Comanda : BaseEntity
     public decimal Subtotal { get; set; }
 
     public EMetodoPagamento MetodoDePagamento { get; set; }
+    public List<Item> Itens { get; set; } = [];
 }
