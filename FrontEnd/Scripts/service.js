@@ -1,6 +1,84 @@
+const DEFAULT_BASE_URL = "http://localhost:5109";
+
 class ApiService {
-  constructor(baseUrl) {
-    this.baseUrl = baseUrl;
+  constructor(baseUrl = DEFAULT_BASE_URL) {
+    this.baseUrl = baseUrl.replace(/\/$/, "");
+  }
+
+  buildUrl(endpoint) {
+    const normalizedEndpoint = endpoint.startsWith("/")
+      ? endpoint
+      : `/${endpoint}`;
+    return `${this.baseUrl}${normalizedEndpoint}`;
+  }
+
+  async readPayload(response) {
+    const text = await response.text();
+
+    if (!text) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(text);
+    } catch {
+      return text;
+    }
+  }
+
+  unwrapResponse(payload) {
+    if (payload == null || Array.isArray(payload) || typeof payload !== "object") {
+      return payload;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(payload, "data")) {
+      return payload.data;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(payload, "Data")) {
+      return payload.Data;
+    }
+
+    return payload;
+  }
+
+  getErrorMessage(payload, fallbackMessage) {
+    if (payload == null) {
+      return fallbackMessage;
+    }
+
+    if (typeof payload === "string") {
+      return payload;
+    }
+
+    const message = payload.message ?? payload.Message;
+    if (typeof message === "string" && message.trim()) {
+      return message;
+    }
+
+    const errors = payload.errors ?? payload.Errors;
+    if (Array.isArray(errors) && errors.length) {
+      return errors.filter(Boolean).join(" | ");
+    }
+
+    return fallbackMessage;
+  }
+
+  hasWrappedError(payload) {
+    if (payload == null || Array.isArray(payload) || typeof payload !== "object") {
+      return false;
+    }
+
+    const message = payload.message ?? payload.Message;
+    const hasData =
+      Object.prototype.hasOwnProperty.call(payload, "data") ||
+      Object.prototype.hasOwnProperty.call(payload, "Data");
+    const success = payload.success ?? payload.Success;
+
+    return (
+      (typeof message === "string" && message.trim() && !hasData) ||
+      success === false
+    );
   }
 
   async request(endpoint, method = "GET", body = null) {
@@ -17,16 +95,19 @@ class ApiService {
       options.body = JSON.stringify(body);
     }
 
-    try {
-      const response = await fetch(`${this.baseUrl}${endpoint}`, options);
-      if (!response.ok) {
-        throw new Error(`Erro: ${response.status} - ${response.statusText}`);
-      }
-      return await response.json();
-    } catch (error) {
-      console.error("Erro na requisição:", error);
-      throw error;
+    const response = await fetch(this.buildUrl(endpoint), options);
+    const payload = await this.readPayload(response);
+
+    if (!response.ok || this.hasWrappedError(payload)) {
+      throw new Error(
+        this.getErrorMessage(
+          payload,
+          `Erro: ${response.status} - ${response.statusText}`,
+        ),
+      );
     }
+
+    return this.unwrapResponse(payload);
   }
 
   // Métodos específicos para cada entidade
@@ -71,7 +152,7 @@ class ApiService {
   }
 
   async addItemComanda(data) {
-    return this.request(`/api/v1/comandas/itens`, "POST", data);
+    return this.request("/api/v1/comandas/item", "POST", data);
   }
 
   async getEnderecos() {
@@ -116,7 +197,7 @@ class ApiService {
 }
 
 // Exemplo de uso:
-// const api = new ApiService('http://localhost:8080');
+// const api = new ApiService("http://localhost:5109");
 // api.getClientes().then(clientes => console.log(clientes));
 
 export default ApiService;

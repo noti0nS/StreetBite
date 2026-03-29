@@ -1,4 +1,8 @@
+import ApiService from "./service.js";
+
 (() => {
+  const api = new ApiService();
+
   const createItemButton = document.querySelector(".createItem");
   const gridSection = document.querySelector(".gridSection");
 
@@ -18,18 +22,12 @@
   const imgArea = document.querySelector(".imgDivModal");
   const imageImg = document.querySelector("#imageImg");
 
-  const optionsGET = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-
   let editMode = false;
   let editingItemId = null;
 
   function getProductImageByNameOrCategory(nome, categoria) {
     const normalizedName = (nome || "").trim().toLowerCase();
+    const normalizedCategory = String(categoria ?? "").trim().toUpperCase();
 
     if (normalizedName === "big sb") return "../Imgs/images/items/bigSB";
     if (normalizedName === "big sb bacon")
@@ -39,31 +37,43 @@
     if (normalizedName === "classic sb")
       return "../Imgs/images/items/cheeseClassic";
 
-    if (categoria === "BEBIDA") return "../Imgs/images/eachCategory/bebida.jpg";
-    if (categoria === "ACOMPANHAMENTO")
+    if (normalizedCategory === "BEBIDA")
+      return "../Imgs/images/eachCategory/bebida.jpg";
+    if (normalizedCategory === "ACOMPANHAMENTO")
       return "../Imgs/images/eachCategory/acompanhamento.jpg";
-    if (categoria === "COMBO") return "../Imgs/images/eachCategory/combo.jpg";
+    if (normalizedCategory === "COMBO")
+      return "../Imgs/images/eachCategory/combo.jpg";
     return "../Imgs/images/eachCategory/lanche.jpg";
   }
 
   function resetWizardForm() {
     inputName.value = "";
-    selectCategory.value = "LANCHE";
+    selectCategory.value = "Lanche";
     inputPrice.value = "";
     inputDesc.value = "";
     imageImg.src = "";
   }
 
+  function normalizeCategoryValue(categoria) {
+    const normalizedCategory = String(categoria ?? "").trim().toUpperCase();
+
+    if (normalizedCategory === "ACOMPANHAMENTO") return "Acompanhamento";
+    if (normalizedCategory === "BEBIDA") return "Bebida";
+    if (normalizedCategory === "COMBO") return "Combo";
+    return "Lanche";
+  }
+
   function openWizard(mode, produto = null) {
     editMode = mode === "edit";
-    editingItemId = produto?.id ?? null;
+    editingItemId = produto?.id ?? produto?.produtoId ?? null;
 
     if (editMode && produto) {
       wizardTitle.textContent = "Assistente de Edição de Item";
       wizardSubtitle.textContent = "Atualize os dados do item selecionado.";
       inputName.value = produto.nome ?? "";
-      selectCategory.value = produto.categoria ?? "LANCHE";
+      selectCategory.value = normalizeCategoryValue(produto.categoria);
       inputPrice.value = produto.preco ?? "";
+      inputDesc.value = produto.descricao ?? "";
       wizardNext.textContent = "Salvar Edição";
     } else {
       wizardTitle.textContent = "Assistente de Criação de Item";
@@ -74,7 +84,6 @@
     }
 
     wizardStepItem.classList.remove("hidden");
-
     wizardSection.classList.add("is-open");
   }
 
@@ -87,12 +96,99 @@
     wizardNext.textContent = "Criar Item";
   }
 
-  // Close wizard when clicking outside (on the overlay)
-  wizardSection.addEventListener("click", (e) => {
-    if (e.target === wizardSection) {
-      closeWizard();
+  function renderProducts(produtos) {
+    gridSection.innerHTML = "";
+
+    produtos.forEach((produto) => {
+      const grid = document.createElement("div");
+      const productName = document.createElement("h2");
+      const itemImageDiv = document.createElement("div");
+      const itemImage = document.createElement("img");
+      const productCategory = document.createElement("h2");
+      const productPrice = document.createElement("h3");
+      const editButton = document.createElement("button");
+      const editImg = document.createElement("img");
+      const deleteButton = document.createElement("button");
+      const deleteImg = document.createElement("img");
+      const buttonsGridDiv = document.createElement("div");
+
+      grid.className = "grid";
+      itemImageDiv.className = "itemImage";
+      editButton.className = "editButton";
+      deleteButton.className = "editButton";
+
+      buttonsGridDiv.style.display = "flex";
+      buttonsGridDiv.style.gap = "10px";
+      productName.textContent = produto.nome;
+      productCategory.textContent = produto.categoria;
+      productPrice.textContent = "R$" + produto.preco;
+
+      itemImage.src = getProductImageByNameOrCategory(
+        produto.nome,
+        produto.categoria,
+      );
+      itemImage.alt = `Imagem do item ${productName.textContent}`;
+
+      editImg.src = "../Imgs/icons/editIcon.svg";
+      editImg.alt = "Editar item";
+
+      deleteImg.src = "../Imgs/icons/deleteIcon.svg";
+      deleteImg.alt = "Excluir item";
+      editButton.setAttribute(
+        "aria-label",
+        `Editar ${productName.textContent}`,
+      );
+      deleteButton.setAttribute(
+        "aria-label",
+        `Excluir ${productName.textContent}`,
+      );
+
+      grid.appendChild(productName);
+      itemImageDiv.appendChild(itemImage);
+      grid.appendChild(itemImageDiv);
+      grid.appendChild(productCategory);
+      grid.appendChild(productPrice);
+      buttonsGridDiv.appendChild(editButton);
+      buttonsGridDiv.appendChild(deleteButton);
+      editButton.appendChild(editImg);
+      deleteButton.appendChild(deleteImg);
+      grid.appendChild(buttonsGridDiv);
+      gridSection.appendChild(grid);
+
+      grid.style.animation = "gridAnim .5s";
+
+      deleteButton.addEventListener("click", async () => {
+        const produtoId = produto.id ?? produto.produtoId;
+
+        if (produtoId == null) {
+          alert("Não foi possível identificar o item selecionado.");
+          return;
+        }
+
+        try {
+          await api.deleteProduto(produtoId);
+          grid.remove();
+        } catch (error) {
+          console.error("Erro ao excluir produto:", error);
+          alert(error.message || "Não foi possível excluir o item.");
+        }
+      });
+
+      editButton.addEventListener("click", () => {
+        openWizard("edit", produto);
+      });
+    });
+  }
+
+  async function loadProducts() {
+    try {
+      const produtos = await api.getProdutos();
+      renderProducts(Array.isArray(produtos) ? produtos : []);
+    } catch (error) {
+      console.error("Erro ao carregar produtos:", error);
+      alert(error.message || "Não foi possível carregar os produtos.");
     }
-  });
+  }
 
   async function saveItem() {
     const nome = inputName.value.trim();
@@ -110,41 +206,30 @@
       categoria,
     };
 
-    const requestOptions = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    };
+    try {
+      if (editMode && editingItemId != null) {
+        await api.updateProduto(editingItemId, payload);
+      } else {
+        await api.createProduto(payload);
+      }
 
-    if (editMode && editingItemId) {
-      await fetch(`http://localhost:8080/api/v1/produtos/${editingItemId}`, {
-        ...requestOptions,
-        method: "PATCH",
-      });
-    } else {
-      await fetch("http://localhost:8080/api/v1/produtos", {
-        ...requestOptions,
-        method: "POST",
-      });
+      closeWizard();
+      await window.loadPage("menu");
+    } catch (error) {
+      console.error("Erro ao salvar produto:", error);
+      alert(error.message || "Não foi possível salvar o item.");
     }
-
-    closeWizard();
-    window.loadPage("menu");
   }
 
   createItemButton.addEventListener("click", () => openWizard("create"));
-
   wizardCancel.addEventListener("click", closeWizard);
 
-  // Close wizard when clicking outside (on the overlay)
   wizardSection.addEventListener("click", (e) => {
     if (e.target === wizardSection) {
       closeWizard();
     }
   });
 
-  // Also allow Escape key to close
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && wizardSection.classList.contains("is-open")) {
       closeWizard();
@@ -152,90 +237,6 @@
   });
 
   wizardNext.addEventListener("click", saveItem);
-
-  fetch("http://localhost:8080/api/v1/produtos", optionsGET)
-    .then((response) => response.json())
-    .then((data) => {
-      for (let index = 0; index < data.length; index++) {
-        const produto = data[index];
-
-        let grid = document.createElement("div");
-        let productName = document.createElement("h2");
-        let itemImageDiv = document.createElement("div");
-        let itemImage = document.createElement("img");
-        let productCategory = document.createElement("h2");
-        let productPrice = document.createElement("h3");
-        let editButton = document.createElement("button");
-        let editImg = document.createElement("img");
-        let deleteButton = document.createElement("button");
-        let deleteImg = document.createElement("img");
-        let buttonsGridDiv = document.createElement("div");
-
-        grid.className = "grid";
-        itemImageDiv.className = "itemImage";
-        editButton.className = "editButton";
-        deleteButton.className = "editButton";
-
-        buttonsGridDiv.style.display = "flex";
-        buttonsGridDiv.style.gap = "10px";
-        productName.textContent = produto.nome;
-        productCategory.textContent = produto.categoria;
-        productPrice.textContent = "R$" + produto.preco;
-
-        itemImage.src = getProductImageByNameOrCategory(
-          produto.nome,
-          produto.categoria,
-        );
-        itemImage.alt = `Imagem do item ${productName.textContent}`;
-
-        editImg.src = "../Imgs/icons/editIcon.svg";
-        editImg.alt = "Editar item";
-
-        deleteImg.src = "../Imgs/icons/deleteIcon.svg";
-        deleteImg.alt = "Excluir item";
-        editButton.setAttribute(
-          "aria-label",
-          `Editar ${productName.textContent}`,
-        );
-        deleteButton.setAttribute(
-          "aria-label",
-          `Excluir ${productName.textContent}`,
-        );
-        grid.appendChild(productName);
-        itemImageDiv.appendChild(itemImage);
-        grid.appendChild(itemImageDiv);
-        grid.appendChild(productCategory);
-        grid.appendChild(productPrice);
-        buttonsGridDiv.appendChild(editButton);
-        buttonsGridDiv.appendChild(deleteButton);
-        editButton.appendChild(editImg);
-
-        deleteButton.appendChild(deleteImg);
-        grid.appendChild(buttonsGridDiv);
-        gridSection.appendChild(grid);
-
-        grid.style.animation = "gridAnim .5s";
-        deleteButton.addEventListener("click", () => {
-          const optionsDELETE = {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          };
-
-          fetch(
-            `http://localhost:8080/api/v1/produtos/${produto.id}`,
-            optionsDELETE,
-          ).then(() => {
-            grid.remove();
-          });
-        });
-
-        editButton.addEventListener("click", () => {
-          openWizard("edit", produto);
-        });
-      }
-    });
 
   inputFile.addEventListener("change", function () {
     const image = this.files[0];
@@ -254,4 +255,6 @@
     };
     reader.readAsDataURL(image);
   });
+
+  loadProducts();
 })();
