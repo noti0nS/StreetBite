@@ -39,12 +39,16 @@
     const normalizedName = (nome || "").trim().toLowerCase();
 
     if (normalizedName === "big sb") return "../Imgs/images/items/bigSB";
-    if (normalizedName === "big sb bacon") return "../Imgs/images/items/bigSBbacon";
-    if (normalizedName === "big sb cheddar") return "../Imgs/images/items/bigSBCheddar";
-    if (normalizedName === "classic sb") return "../Imgs/images/items/cheeseClassic";
+    if (normalizedName === "big sb bacon")
+      return "../Imgs/images/items/bigSBbacon";
+    if (normalizedName === "big sb cheddar")
+      return "../Imgs/images/items/bigSBCheddar";
+    if (normalizedName === "classic sb")
+      return "../Imgs/images/items/cheeseClassic";
 
     if (category === "BEBIDA") return "../Imgs/images/eachCategory/bebida.jpg";
-    if (category === "ACOMPANHAMENTO") return "../Imgs/images/eachCategory/acompanhamento.jpg";
+    if (category === "ACOMPANHAMENTO")
+      return "../Imgs/images/eachCategory/acompanhamento.jpg";
     if (category === "COMBO") return "../Imgs/images/eachCategory/combo.jpg";
     return "../Imgs/images/eachCategory/lanche.jpg";
   }
@@ -112,7 +116,10 @@
 
   async function fillProductOptions() {
     if (products.length) return;
-    const response = await fetch("http://localhost:8080/api/v1/produtos", optionsGET);
+    const response = await fetch(
+      "http://localhost:8080/api/v1/produtos",
+      optionsGET,
+    );
     products = await response.json();
 
     products.forEach((product) => {
@@ -138,7 +145,10 @@
       method: "POST",
     });
 
-    const commandasResponse = await fetch("http://localhost:8080/api/v1/comandas", optionsGET);
+    const commandasResponse = await fetch(
+      "http://localhost:8080/api/v1/comandas",
+      optionsGET,
+    );
     const comandas = await commandasResponse.json();
     const lastComanda = comandas.reduce((max, current) => {
       return current.comandaId > max.comandaId ? current : max;
@@ -274,7 +284,9 @@
       return;
     }
 
-    const selectedProduct = products.find((product) => Number(product.id) === productId);
+    const selectedProduct = products.find(
+      (product) => Number(product.id) === productId,
+    );
     if (!selectedProduct) return;
 
     cartItems.push({
@@ -304,7 +316,11 @@
 
         const headerDate = document.createElement("div");
         headerDate.className = "orderHeaderField";
-        headerDate.innerHTML = `<span class="orderHeaderLabel">Pedido Realizado</span><strong>${String(order.pedidoCriadoEm || "").slice(0, 19).replace("T", " ")}</strong>`;
+        headerDate.innerHTML = `<span class="orderHeaderLabel">Pedido Realizado</span><strong>${String(
+          order.pedidoCriadoEm || "",
+        )
+          .slice(0, 19)
+          .replace("T", " ")}</strong>`;
 
         const headerTotal = document.createElement("div");
         headerTotal.className = "orderHeaderField";
@@ -389,7 +405,10 @@
         const orderDoneButton = document.createElement("button");
         orderDoneButton.className = "orderPreparingButtons";
         orderDoneButton.type = "button";
-        orderDoneButton.setAttribute("aria-label", "Marcar pedido como concluído");
+        orderDoneButton.setAttribute(
+          "aria-label",
+          "Marcar pedido como concluído",
+        );
         orderDoneButton.innerHTML = `<img src="../Imgs/icons/checkIcon.svg" alt="Concluir pedido" />`;
 
         const orderDeleteButton = document.createElement("button");
@@ -431,12 +450,13 @@
 
           const buttonLabel = expandButton.querySelector(".orderExpandLabel");
           if (buttonLabel) {
-            buttonLabel.textContent = isExpanded ? "Ocultar detalhes" : "Ver detalhes";
+            buttonLabel.textContent = isExpanded
+              ? "Ocultar detalhes"
+              : "Ver detalhes";
           }
         });
 
         gridSection.appendChild(card);
       }
     });
-
 })();

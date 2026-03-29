@@ -3,7 +3,9 @@ const homeButton = document.querySelector("#homeButton");
 const menuButton = document.querySelector("#menuButton");
 const ordersButton = document.querySelector("#ordersButton");
 const settingsButton = document.querySelector("#settingsButton");
-const themeToggleSidebarButton = document.querySelector("#themeToggleSidebarButton");
+const themeToggleSidebarButton = document.querySelector(
+  "#themeToggleSidebarButton",
+);
 const themeToggleIcon = document.querySelector("#themeToggleIcon");
 
 const THEME_STORAGE_KEY = "streetbite-theme";
@@ -32,7 +34,7 @@ function updateThemeControls(theme) {
     themeToggleSidebarButton.setAttribute("aria-pressed", String(isDark));
     themeToggleSidebarButton.setAttribute(
       "aria-label",
-      isDark ? "Voltar para modo claro" : "Ativar modo escuro"
+      isDark ? "Voltar para modo claro" : "Ativar modo escuro",
     );
   }
 
@@ -54,10 +56,30 @@ window.toggleTheme = toggleTheme;
 applyTheme(getCurrentTheme());
 
 const pages = {
-  home:           { html: "Iframes/home.html",           script: "../Scripts/home.js",            module: false, css: "../Styles/home.css" },
-  menu:           { html: "Iframes/menu.html",           script: "../Scripts/menu.js",            module: false, css: "../Styles/menu.css" },
-  requests:       { html: "Iframes/requests.html",       script: "../Scripts/requests.js",        module: false, css: "../Styles/requests.css" },
-  settings:       { html: "Iframes/settings.html",       script: "../Scripts/settings.js",      module: false, css: "../Styles/settings.css" },
+  home: {
+    html: "Iframes/home.html",
+    script: "../Scripts/home.js",
+    module: false,
+    css: "../Styles/home.css",
+  },
+  menu: {
+    html: "Iframes/menu.html",
+    script: "../Scripts/menu.js",
+    module: false,
+    css: "../Styles/menu.css",
+  },
+  requests: {
+    html: "Iframes/requests.html",
+    script: "../Scripts/requests.js",
+    module: false,
+    css: "../Styles/requests.css",
+  },
+  settings: {
+    html: "Iframes/settings.html",
+    script: "../Scripts/settings.js",
+    module: false,
+    css: "../Styles/settings.css",
+  },
 };
 
 // Map href filenames to page keys for internal link interception

@@ -1,33 +1,33 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@100..900&display=swap");
 
 :root {
-  --primary: #E63946;
-  --secondary: #1D3557;
-  --background: #F8F9FA;
-  --card: #FFFFFF;
+  --primary: #e63946;
+  --secondary: #1d3557;
+  --background: #f8f9fa;
+  --card: #ffffff;
   --text: #212529;
-  --text-light: #6C757D;
-  --secondary-soft: #E9EEF5;
-  --primary-soft: #FDECEE;
-  --border: #DCE3EA;
-  --danger: #C1121F;
-  --success: #2A9D8F;
-  --button-color: #AF303B;
+  --text-light: #6c757d;
+  --secondary-soft: #e9eef5;
+  --primary-soft: #fdecee;
+  --border: #dce3ea;
+  --danger: #c1121f;
+  --success: #2a9d8f;
+  --button-color: #af303b;
 }
 
 :root[data-theme="dark"] {
-  --primary: #E63946;
-  --secondary: #8FB3D9;
-  --background: #10151C;
-  --card: #1A222D;
-  --text: #E9ECEF;
-  --text-light: #AEB8C2;
+  --primary: #e63946;
+  --secondary: #8fb3d9;
+  --background: #10151c;
+  --card: #1a222d;
+  --text: #e9ecef;
+  --text-light: #aeb8c2;
   --secondary-soft: #263243;
-  --primary-soft: #3A2327;
+  --primary-soft: #3a2327;
   --border: #314152;
-  --danger: #FF5D6A;
-  --success: #4CC9A6;
-  --button-color: #EE646E;
+  --danger: #ff5d6a;
+  --success: #4cc9a6;
+  --button-color: #ee646e;
 }
 
 .main,
@@ -103,7 +103,10 @@ body {
   line-height: 1;
   padding: 0 16px;
   box-sizing: border-box;
-  transition: background-color 0.24s ease, transform 0.2s ease, box-shadow 0.24s ease;
+  transition:
+    background-color 0.24s ease,
+    transform 0.2s ease,
+    box-shadow 0.24s ease;
 }
 
 .main nav button:hover {
@@ -134,8 +137,6 @@ body {
   transition: 0.3s;
   color: var(--card);
 }
-
-
 
 @keyframes gridAnim {
   from {
@@ -343,7 +344,9 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.24s ease, color 0.24s ease;
+  transition:
+    background-color 0.24s ease,
+    color 0.24s ease;
 }
 
 .inputImg:hover {
@@ -366,7 +369,9 @@ body {
   border: 0;
   padding: 0 14px;
   font-weight: 600;
-  transition: background-color 0.24s ease, color 0.24s ease;
+  transition:
+    background-color 0.24s ease,
+    color 0.24s ease;
 }
 
 .wizardButton:hover {
@@ -463,4 +468,3 @@ body {
     font-size: 14px;
   }
 }
-

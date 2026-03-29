@@ -32,12 +32,16 @@
     const normalizedName = (nome || "").trim().toLowerCase();
 
     if (normalizedName === "big sb") return "../Imgs/images/items/bigSB";
-    if (normalizedName === "big sb bacon") return "../Imgs/images/items/bigSBbacon";
-    if (normalizedName === "big sb cheddar") return "../Imgs/images/items/bigSBCheddar";
-    if (normalizedName === "classic sb") return "../Imgs/images/items/cheeseClassic";
+    if (normalizedName === "big sb bacon")
+      return "../Imgs/images/items/bigSBbacon";
+    if (normalizedName === "big sb cheddar")
+      return "../Imgs/images/items/bigSBCheddar";
+    if (normalizedName === "classic sb")
+      return "../Imgs/images/items/cheeseClassic";
 
     if (categoria === "BEBIDA") return "../Imgs/images/eachCategory/bebida.jpg";
-    if (categoria === "ACOMPANHAMENTO") return "../Imgs/images/eachCategory/acompanhamento.jpg";
+    if (categoria === "ACOMPANHAMENTO")
+      return "../Imgs/images/eachCategory/acompanhamento.jpg";
     if (categoria === "COMBO") return "../Imgs/images/eachCategory/combo.jpg";
     return "../Imgs/images/eachCategory/lanche.jpg";
   }
@@ -63,7 +67,8 @@
       wizardNext.textContent = "Salvar Edição";
     } else {
       wizardTitle.textContent = "Assistente de Criação de Item";
-      wizardSubtitle.textContent = "Preencha os dados para cadastrar um novo item no cardápio.";
+      wizardSubtitle.textContent =
+        "Preencha os dados para cadastrar um novo item no cardápio.";
       resetWizardForm();
       wizardNext.textContent = "Criar Item";
     }
@@ -177,7 +182,10 @@
         productCategory.textContent = produto.categoria;
         productPrice.textContent = "R$" + produto.preco;
 
-        itemImage.src = getProductImageByNameOrCategory(produto.nome, produto.categoria);
+        itemImage.src = getProductImageByNameOrCategory(
+          produto.nome,
+          produto.categoria,
+        );
         itemImage.alt = `Imagem do item ${productName.textContent}`;
 
         editImg.src = "../Imgs/icons/editIcon.svg";
@@ -185,8 +193,14 @@
 
         deleteImg.src = "../Imgs/icons/deleteIcon.svg";
         deleteImg.alt = "Excluir item";
-        editButton.setAttribute("aria-label", `Editar ${productName.textContent}`);
-        deleteButton.setAttribute("aria-label", `Excluir ${productName.textContent}`);
+        editButton.setAttribute(
+          "aria-label",
+          `Editar ${productName.textContent}`,
+        );
+        deleteButton.setAttribute(
+          "aria-label",
+          `Excluir ${productName.textContent}`,
+        );
         grid.appendChild(productName);
         itemImageDiv.appendChild(itemImage);
         grid.appendChild(itemImageDiv);
@@ -209,10 +223,12 @@
             },
           };
 
-          fetch(`http://localhost:8080/api/v1/produtos/${produto.id}`, optionsDELETE)
-            .then(() => {
-              grid.remove();
-            });
+          fetch(
+            `http://localhost:8080/api/v1/produtos/${produto.id}`,
+            optionsDELETE,
+          ).then(() => {
+            grid.remove();
+          });
         });
 
         editButton.addEventListener("click", () => {
@@ -238,5 +254,4 @@
     };
     reader.readAsDataURL(image);
   });
-
 })();
