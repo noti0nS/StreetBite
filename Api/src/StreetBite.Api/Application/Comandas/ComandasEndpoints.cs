@@ -10,9 +10,7 @@ public static class ComandasEndpoints
 
         group.MapPost("", CriarComanda);
         group.MapGet("", ListarComandas);
-        group.MapGet("/{id:long}", ObterComandaPorId);
         group.MapPatch("/{id:long}", AtualizarComanda);
-        group.MapDelete("/{id:long}", RemoverComanda);
 
         return group;
     }
@@ -21,9 +19,5 @@ public static class ComandasEndpoints
 
     private static IResult ListarComandas() => TypedResults.Ok(new { message = TodoMessage });
 
-    private static IResult ObterComandaPorId(long id) => TypedResults.Ok(new { message = TodoMessage });
-
     private static IResult AtualizarComanda(long id) => TypedResults.Ok(new { message = TodoMessage });
-
-    private static IResult RemoverComanda(long id) => TypedResults.Ok(new { message = TodoMessage });
 }
