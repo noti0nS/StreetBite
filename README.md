@@ -4,7 +4,8 @@
 
 
 
-<img width="809" height="556" alt="image" src="https://github.com/user-attachments/assets/7702b872-32b5-4bce-a2e5-6c739d1d864b" />
+<img width="1919" height="902" alt="image" src="https://github.com/user-attachments/assets/39529833-9d36-4acd-8bc7-126b629e4d80" />
+
 
 
 `CESMAC AL` `SISTEMAS DE INFORMAÇÃO`
