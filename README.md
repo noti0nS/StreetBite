@@ -29,6 +29,5 @@ Entre no "StreetBiteApplication.java" e clique em Run (Rodar) no canto superior 
 
 ![comousar](https://github.com/user-attachments/assets/1ba9cc6c-62fc-4fe9-80da-0649265aa109)
 
-## DOCUMENTAÇÃO:
-- [Documentação de Contexto](https://drive.google.com/file/d/1i7cvJ9N9pWvz6rzsD6tSsUfalnOabutx/view?usp=drive_link)
+## FIGMA:
 - [Design da Aplicação](https://www.figma.com/design/uAC8odd4ScmFf9QTPhL8t1/StreetBite?node-id=0-1&p=f&t=Hr3nVETTd1u2AIGM-0)
