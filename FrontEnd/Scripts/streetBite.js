@@ -70,10 +70,11 @@ window.toggleTheme = toggleTheme;
 applyTheme(getCurrentTheme());
 
 const pages = {
-  home:           { html: "Iframes/home.html",           script: "../Scripts/home.js",            module: false, css: "../Styles/home.css" },
-  menu:           { html: "Iframes/menu.html",           script: "../Scripts/menu.js",            module: false, css: "../Styles/menu.css" },
-  requests:       { html: "Iframes/requests.html",       script: "../Scripts/requests.js",        module: false, css: "../Styles/requests.css" },
-  settings:       { html: "Iframes/settings.html",       script: "../Scripts/settings.js",      module: false, css: "../Styles/settings.css" },
+  home:           { html: "Iframes/home.html",           script: "../Scripts/home.js",            module: true, css: "../Styles/home.css" },
+  menu:           { html: "Iframes/menu.html",           script: "../Scripts/menu.js",            module: true, css: "../Styles/menu.css" },
+  requests:       { html: "Iframes/requests.html",       script: "../Scripts/requests.js",        module: true, css: "../Styles/requests.css" },
+  createNewOrder: { html: "Iframes/createNewOrder.html", script: "../Scripts/createNewOrder.js",  module: true,  css: "../Styles/createNewOrder.css" },
+  settings:       { html: "Iframes/settings.html",       script: null,                            module: false, css: "../Styles/settings.css" },
 };
 
 // Map href filenames to page keys for internal link interception
@@ -162,7 +163,8 @@ async function loadPage(pageKey) {
   // Inject page script if defined
   if (page.script) {
     const script = document.createElement("script");
-    script.src = page.script;
+    // Cache-bust so module scripts re-execute on each tab switch
+    script.src = page.script + "?t=" + Date.now();
     if (page.module) script.type = "module";
     document.body.appendChild(script);
     currentPageScript = script;
