@@ -10,7 +10,7 @@ public static class ItensEndpoints
     {
         var group = app.MapGroup("/api/v1/comandas")
             .WithTags("Itens")
-            .AddEndpointFilter<EntityValidationFilter>();
+            .AddEndpointFilter<ValidationRequestFilter>();
 
         group.MapPost("/item", AdicionarItem);
 

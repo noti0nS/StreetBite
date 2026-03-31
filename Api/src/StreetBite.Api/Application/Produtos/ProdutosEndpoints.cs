@@ -1,7 +1,11 @@
+using Microsoft.AspNetCore.Mvc;
+using StreetBite.Api;
 using StreetBite.Api.Abstractions;
 using StreetBite.Api.Application.Common.Extensions;
 using StreetBite.Api.Application.Common.Filters;
+using StreetBite.Api.Views.DTOs;
 using StreetBite.Api.Views.Requests;
+using StreetBite.Api.Views.Responses;
 using StreetBite.Core.Entities;
 
 namespace StreetBite.Api.Application.Produtos;
@@ -11,7 +15,7 @@ public static class ProdutosEndpoints
     public static RouteGroupBuilder MapProdutosEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/api/v1/produtos")
-            .AddEndpointFilter<EntityValidationFilter>()
+            .AddEndpointFilter<ValidationRequestFilter>()
             .WithTags("Produtos");
 
         group.MapPost("", AdicionarProduto);
@@ -34,10 +38,21 @@ public static class ProdutosEndpoints
         return result.ToHttpResult();
     }
 
-    private static async Task<IResult> ListarProdutos(IProductService produtoService, CancellationToken cancellationToken)
+    private static async Task<IResult> ListarProdutos(
+        IProductService produtoService,
+        [AsParameters] PagedRequest pagedRequest,
+        CancellationToken cancellationToken = default)
     {
-        var result = await produtoService.ListProductsAsync(cancellationToken);
-        return result.ToHttpResult();
+        var result = await produtoService.ListProductsAsync(pagedRequest.CurrentPage, pagedRequest.PageSize, cancellationToken);
+
+        if (!result.Success)
+        {
+            var failure = new PagedApiResponse<List<ProductViewDTO>>(result.Message ?? "Erro ao listar produtos", result.StatusCode);
+            return TypedResults.Json(failure, statusCode: (int)result.StatusCode);
+        }
+
+        // result.Data is already a PagedApiResponse<List<ProductViewDTO>>
+        return TypedResults.Ok(result.Data);
     }
 
     private static async Task<IResult> ObterProdutoPorId(IProductService produtoService, long id, CancellationToken cancellationToken)

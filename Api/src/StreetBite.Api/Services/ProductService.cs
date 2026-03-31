@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using StreetBite.Api.Abstractions;
 using StreetBite.Api.Views.DTOs;
 using StreetBite.Api.Views.Requests;
+using StreetBite.Api.Views.Responses;
 using StreetBite.Core.Entities;
 using StreetBite.Core.Models;
 using StreetBite.Infra.Data;
@@ -26,15 +27,36 @@ public sealed class ProductService(StreetBiteDbContext dbContext) : IProductServ
         return Result<ProductViewDTO>.Ok(addedProduct);
     }
 
-    public async Task<Result<List<ProductViewDTO>>> ListProductsAsync(CancellationToken cancellationToken = default)
+    public async Task<Result<PagedApiResponse<List<ProductViewDTO>>>> ListProductsAsync(
+        int currentPage,
+        int pageSize,
+        CancellationToken cancellationToken = default)
     {
+        if (currentPage <= 0 || pageSize <= 0)
+        {
+            return Result<PagedApiResponse<List<ProductViewDTO>>>.Fail(
+                "Cabeçalhos de paginação inválidos. currentPage e pageSize devem ser maiores que zero.",
+                System.Net.HttpStatusCode.BadRequest);
+        }
+
+        var totalRecords = await dbContext.Produtos.CountAsync(cancellationToken);
+
         var products = await dbContext.Produtos
             .AsNoTracking()
             .OrderBy(x => x.Nome)
+            .Skip((currentPage - 1) * pageSize)
+            .Take(pageSize)
             .Select(x => new ProductViewDTO(x.Id, x.Nome, x.Preco, x.Categoria))
             .ToListAsync(cancellationToken);
 
-        return Result<List<ProductViewDTO>>.Ok(products);
+        var pagedResponse = new PagedApiResponse<List<ProductViewDTO>>(
+            products,
+            "Produtos listados com sucesso.",
+            currentPage,
+            totalRecords,
+            pageSize);
+
+        return Result<PagedApiResponse<List<ProductViewDTO>>>.Ok(pagedResponse);
     }
 
     public async Task<Result<ProductViewDTO>> GetProductByIdAsync(long id, CancellationToken cancellationToken = default)

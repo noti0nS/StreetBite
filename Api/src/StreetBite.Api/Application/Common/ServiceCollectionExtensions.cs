@@ -18,9 +18,14 @@ public static class ServiceCollectionExtensions
                     .AllowAnyHeader()
                     .AllowAnyMethod());
         });
+
+
         services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
+
         services.AddDbContext<StreetBiteDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+
         services.AddScoped<IProductService, ProductService>();
 
         return services;

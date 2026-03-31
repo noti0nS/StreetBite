@@ -10,7 +10,7 @@ public static class ComandasEndpoints
     {
         var group = app.MapGroup("/api/v1/comandas")
             .WithTags("Comandas")
-            .AddEndpointFilter<EntityValidationFilter>();
+            .AddEndpointFilter<ValidationRequestFilter>();
 
         group.MapPost("", CriarComanda);
         group.MapGet("", ListarComandas);

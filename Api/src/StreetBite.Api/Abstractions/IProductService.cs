@@ -11,7 +11,10 @@ public interface IProductService
     Task<Result<ProductViewDTO>> AddProductAsync(
         EntityRequest<Produto> request, CancellationToken cancellationToken = default);
 
-    Task<Result<List<ProductViewDTO>>> ListProductsAsync(CancellationToken cancellationToken = default);
+    Task<Result<PagedApiResponse<List<ProductViewDTO>>>> ListProductsAsync(
+        int currentPage,
+        int pageSize,
+        CancellationToken cancellationToken = default);
 
     Task<Result<ProductViewDTO>> GetProductByIdAsync(
         long id, CancellationToken cancellationToken = default);
