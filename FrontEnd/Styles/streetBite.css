@@ -13,6 +13,7 @@
   --danger: #C1121F;
   --success: #2A9D8F;
   --button-color: #AF303B;
+  
 }
 
 :root[data-theme="dark"] {
@@ -102,6 +103,10 @@ body {
   text-decoration: none;
 }
 
+.navLabel {
+  display: inline;
+}
+
 .navIcon {
   width: 18px;
   height: 18px;
@@ -149,9 +154,18 @@ body {
   cursor: pointer;
   box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.1);
   transition: 0.3s all;
-  position: absolute;
-  bottom: 20px;
+  position: static;
+}
+
+.floatingActionButtons {
+  position: fixed;
   right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 30;
 }
 
 .themeIconButton:hover {
@@ -163,6 +177,61 @@ body {
   font-size: 20px;
   line-height: 1;
 }
+
+.mobileActionButton,
+.mobileQuickActions {
+  display: none;
+}
+
+.mobileActionButton {
+  border: 0;
+  cursor: pointer;
+}
+
+.mobileActionButtonGlyph {
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 300;
+}
+
+.mobileQuickActions {
+  position: absolute;
+  left: 50%;
+  bottom: 74px;
+  transform: translateX(-50%) translateY(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  gap: 14px;
+  align-items: center;
+}
+
+.mobileQuickActions.is-open {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.mobileQuickAction {
+  min-width: 110px;
+  height: 46px;
+  border: 0;
+  border-radius: 10px;
+  background-color: var(--button-color);
+  color: var(--card);
+  font-size: 22px;
+  font-weight: 500;
+  box-shadow: 0 10px 18px rgb(0, 0, 0, 0.2);
+  cursor: pointer;
+  padding: 0 14px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.mobileQuickAction:hover {
+  background-color: var(--secondary-soft);
+  color: var(--secondary);
+}
+
 .navBarButtons:hover {
   cursor: pointer;
   background-color: var(--secondary-soft);
@@ -189,40 +258,152 @@ body {
   overflow-y: auto;
 }
 
-@media only screen and (max-width: 1150px) {
-  .sideBar {
-    position: absolute;
-    z-index: 2;
-    bottom: 0;
-    left: 0;
-    height: 100px;
-    width: 100%;
-    box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.2);
+
+
+@media only screen and (max-width: 768px) {
+  .floatingActionButtons {
+    right: 16px;
+    bottom: 106px;
   }
+
+  .asw-menu-btn {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin: 0 !important;
+    z-index: auto !important;
+  }
+  .sideBar {
+    position: fixed;
+    z-index: 10;
+    justify-content: center;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    height: 74px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 26px rgb(0, 0, 0, 0.16);
+    overflow: visible;
+  }
+  
+
   .logo {
     display: none;
   }
+
   .buttonsNav {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-  }
-  .navBarButtons {
-    height: 72px;
     width: 100%;
+    margin: 0;
+    padding: 8px 12px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    justify-items: center;
+    gap: 0;
+  }
+
+  .navBarButtons {
+    height: 46px;
+    width: 46px;
+    min-width: 46px;
+    border-radius: 14px;
+    background-color: transparent;
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 8px;
-    font-size: 13px;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    box-shadow: none;
+    color: var(--text-light);
+    overflow: hidden;
+  }
+
+  .navLabel {
+    display: none;
+  }
+
+  .navBarButtons .navIcon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .mobileActionButton {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 50%;
+    background-color: var(--button-color);
+    color: white; 
+    transform: none;
+    box-shadow: 0 6px 14px rgb(175, 48, 59, 0.28);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.1s all;
+  }
+
+  .navBarButtons:hover,
+  .navBarButtons.is-active {
+    background-color: var(--secondary-soft);
+    color: var(--secondary);
+  }
+
+  .mobileActionButton:hover,
+  .mobileActionButton[aria-expanded="true"] {
+    background-color: var(--secondary-soft);
+    color: var(--text)
+    
+  }
+
+  .mobileQuickActions {
+    display: inline-flex;
+    bottom: 86px;
+    z-index: 25;
   }
 
   .themeIconButton {
     width: 48px;
     min-width: 48px;
     height: 48px;
-    bottom: 15px;
-    right: 15px;
+    position: static;
+  }
+
+  [vw-access-button] {
+    position: fixed !important;
+    left: auto !important;
+    /* right: 16px !important; */
+    bottom: 168px !important;
+    transform: none !important;
+    margin: 0 !important;
+    z-index: 2 !important;
+  }
+
+  .contentArea {
+    padding-bottom: 98px;
+    box-sizing: border-box;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .mobileActionButton,
+  .mobileQuickActions {
+    display: none !important;
+  }
+
+  /* .themeIconButton {
+    position: static;
+    transform: scale(0.8);
+  } */
+
+  .asw-menu-btn {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin: 0 !important;
+    z-index: auto !important;
   }
 }
 

@@ -148,6 +148,11 @@
 
   wizardNext.addEventListener("click", saveItem);
 
+  if (window.__streetbitePendingAction === "open-item-wizard") {
+    window.__streetbitePendingAction = null;
+    openWizard("create");
+  }
+
   fetch("http://localhost:8080/api/v1/produtos", optionsGET)
     .then((response) => response.json())
     .then((data) => {

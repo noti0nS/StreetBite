@@ -290,6 +290,11 @@
     renderCart();
   });
 
+  if (window.__streetbitePendingAction === "open-order-wizard") {
+    window.__streetbitePendingAction = null;
+    fillProductOptions().then(openWizard);
+  }
+
   fetch("http://localhost:8080/api/v1/comandas", optionsGET)
     .then((response) => response.json())
     .then((data) => {
