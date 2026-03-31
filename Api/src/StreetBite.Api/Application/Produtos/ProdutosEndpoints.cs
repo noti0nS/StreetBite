@@ -50,8 +50,6 @@ public static class ProdutosEndpoints
             var failure = new PagedApiResponse<List<ProductViewDTO>>(result.Message ?? "Erro ao listar produtos", result.StatusCode);
             return TypedResults.Json(failure, statusCode: (int)result.StatusCode);
         }
-
-        // result.Data is already a PagedApiResponse<List<ProductViewDTO>>
         return TypedResults.Ok(result.Data);
     }
 

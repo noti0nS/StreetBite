@@ -14,10 +14,12 @@ public static class WebApplicationExtensions
                 o.SpecUrl("/openapi/v1.json");
             });
         }
+        else
+        {
+            app.UseHttpsRedirection();
+        }
 
         app.UseExceptionHandler();
-        app.UseHttpsRedirection();
-
         app.UseCors(ApiConstants.CorsPolicyName);
 
         return app;

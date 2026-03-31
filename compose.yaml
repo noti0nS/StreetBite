@@ -24,6 +24,7 @@ services:
     container_name: streetbite-api
     environment:
       ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=streetbite;Username=postgres;Password=postgres
+      ASPNETCORE_ENVIRONMENT: Development
     ports:
       - '5109:8080'
     depends_on:
