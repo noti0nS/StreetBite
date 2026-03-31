@@ -1,3 +1,5 @@
+using StreetBite.Api.Application.Common.Filters;
+
 namespace StreetBite.Api.Application.Comandas;
 
 public static class ComandasEndpoints
@@ -6,7 +8,9 @@ public static class ComandasEndpoints
 
     public static RouteGroupBuilder MapComandasEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/v1/comandas").WithTags("Comandas");
+        var group = app.MapGroup("/api/v1/comandas")
+            .WithTags("Comandas")
+            .AddEndpointFilter<EntityValidationFilter>();
 
         group.MapPost("", CriarComanda);
         group.MapGet("", ListarComandas);

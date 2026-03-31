@@ -1,16 +1,17 @@
+using System.Net;
+
 namespace StreetBite.Core.Models;
 
 public class Result
 {
     public bool Success { get; set; }
     public string? Message { get; set; }
-    public string[] Errors { get; set; }
+    public HttpStatusCode StatusCode { get; set; } = HttpStatusCode.OK;
 
     public Result()
     {
         Success = true;
         Message = string.Empty;
-        Errors = [];
     }
 
     public static Result Ok(string? message = null)
@@ -19,17 +20,16 @@ public class Result
         {
             Success = true,
             Message = message,
-            Errors = []
         };
     }
 
-    public static Result Fail(string? message, params string[] errors)
+    public static Result Fail(string? message, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
     {
         return new Result
         {
             Success = false,
             Message = message,
-            Errors = errors
+            StatusCode = statusCode
         };
     }
 }
@@ -50,18 +50,17 @@ public class Result<T> : Result
             Success = true,
             Message = message,
             Data = data,
-            Errors = []
         };
     }
 
-    public static new Result<T> Fail(string? message, params string[] errors)
+    public static new Result<T> Fail(string? message, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
     {
         return new Result<T>
         {
             Success = false,
             Message = message,
             Data = default,
-            Errors = errors
+            StatusCode = statusCode,
         };
     }
 }

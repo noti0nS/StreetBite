@@ -1,5 +1,7 @@
-using StreetBite.Api;
 using Microsoft.EntityFrameworkCore;
+using StreetBite.Api.Abstractions;
+using StreetBite.Api.Application.Common.ExceptionHandlers;
+using StreetBite.Api.Services;
 using StreetBite.Infra.Data;
 
 namespace StreetBite.Api.Application.Common;
@@ -16,8 +18,10 @@ public static class ServiceCollectionExtensions
                     .AllowAnyHeader()
                     .AllowAnyMethod());
         });
+        services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddDbContext<StreetBiteDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+        services.AddScoped<IProductService, ProductService>();
 
         return services;
     }

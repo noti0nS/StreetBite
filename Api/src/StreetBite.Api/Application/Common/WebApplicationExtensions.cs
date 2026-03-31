@@ -15,6 +15,7 @@ public static class WebApplicationExtensions
             });
         }
 
+        app.UseExceptionHandler();
         app.UseHttpsRedirection();
 
         app.UseCors(ApiConstants.CorsPolicyName);
