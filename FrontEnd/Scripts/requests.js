@@ -36,7 +36,9 @@ import ApiService from "./service.js";
   }
 
   function normalizeText(value) {
-    return String(value ?? "").trim().toUpperCase();
+    return String(value ?? "")
+      .trim()
+      .toUpperCase();
   }
 
   function categoryImage(category, nome) {
@@ -162,9 +164,7 @@ import ApiService from "./service.js";
 
       if (!comandaId) {
         const comandas = await api.getComandas();
-        const lastComanda = Array.isArray(comandas)
-          ? comandas.at(-1)
-          : null;
+        const lastComanda = Array.isArray(comandas) ? comandas.at(-1) : null;
         comandaId = resolveComandaId(lastComanda);
       }
 

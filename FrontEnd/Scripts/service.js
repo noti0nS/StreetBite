@@ -27,7 +27,11 @@ class ApiService {
   }
 
   unwrapResponse(payload) {
-    if (payload == null || Array.isArray(payload) || typeof payload !== "object") {
+    if (
+      payload == null ||
+      Array.isArray(payload) ||
+      typeof payload !== "object"
+    ) {
       return payload;
     }
 
@@ -65,7 +69,11 @@ class ApiService {
   }
 
   hasWrappedError(payload) {
-    if (payload == null || Array.isArray(payload) || typeof payload !== "object") {
+    if (
+      payload == null ||
+      Array.isArray(payload) ||
+      typeof payload !== "object"
+    ) {
       return false;
     }
 
