@@ -1,6 +1,7 @@
 # StreetBite
 
-<img width="809" height="556" alt="image" src="https://github.com/user-attachments/assets/d9c34a62-2fa2-4ed5-8693-92da47d1b335" />
+<img width="1919" height="908" alt="image" src="https://github.com/user-attachments/assets/cab21bfd-77cd-495b-819a-b0a859213a93" />
+
 
 <img width="809" height="556" alt="image" src="https://github.com/user-attachments/assets/7702b872-32b5-4bce-a2e5-6c739d1d864b" />
 
