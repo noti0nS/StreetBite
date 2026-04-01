@@ -1,21 +1,16 @@
-using StreetBite.Api.Views.Requests;
 using StreetBite.Api.Views.Responses;
 using StreetBite.Core.Abstractions;
 
 namespace StreetBite.Api.Application.Common.Filters;
 
 /// <summary>
-/// Retrieves the parameter whose inherithes from <seealso cref="EntityRequest{T}"/> and validates the data.
+/// Validates any endpoint argument that implements <see cref="IValidation"/>.
 /// </summary>
-/// <typeparam name="TEntity"></typeparam>
 internal class ValidationRequestFilter : IEndpointFilter
 {
-    private static readonly Type _requestType = typeof(IValidation);
-
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
-        var request = (IValidation?)context.Arguments.FirstOrDefault(x => x?.GetType()?.IsSubclassOf(_requestType) ?? false);
-        if (request is not null)
+        foreach (var request in context.Arguments.OfType<IValidation>())
         {
             var result = request.Validate();
             if (!result.Success)
@@ -24,6 +19,7 @@ internal class ValidationRequestFilter : IEndpointFilter
                 return TypedResults.BadRequest(response);
             }
         }
+
         return await next.Invoke(context);
     }
 }

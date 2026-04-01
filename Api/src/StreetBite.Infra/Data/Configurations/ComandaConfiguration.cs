@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using StreetBite.Core.Constants;
 using StreetBite.Core.Entities;
 
 namespace StreetBite.Infra.Data.Configurations;
@@ -12,7 +13,7 @@ public sealed class ComandaConfiguration : BaseEntityConfiguration<Comanda>
 
         builder.Property(x => x.CodigoPedido)
             .IsRequired()
-            .HasMaxLength(4);
+            .HasMaxLength(ComandaConstants.CodigoPedidoLength);
 
         builder.HasIndex(x => x.CodigoPedido)
             .IsUnique();

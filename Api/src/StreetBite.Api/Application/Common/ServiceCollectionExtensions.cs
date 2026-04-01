@@ -27,6 +27,8 @@ public static class ServiceCollectionExtensions
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<IComandaService, ComandaService>();
+        services.AddSingleton<IOrderCodeGeneratorService, NanoIdCodeGeneratorService>();
 
         return services;
     }
