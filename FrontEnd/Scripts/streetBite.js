@@ -1,50 +1,53 @@
-const contentArea = document.querySelector('#contentArea');
-const homeButton = document.querySelector('#homeButton');
-const menuButton = document.querySelector('#menuButton');
-const ordersButton = document.querySelector('#ordersButton');
-const settingsButton = document.querySelector('#settingsButton');
-const themeToggleSidebarButton = document.querySelector(
-  '#themeToggleSidebarButton',
-);
-const themeToggleIcon = document.querySelector('#themeToggleIcon');
+import loadingProgress from "./components/loadingProgress.js";
+import "./components/snackbar.js";
 
-const THEME_STORAGE_KEY = 'streetbite-theme';
+const contentArea = document.querySelector("#contentArea");
+const homeButton = document.querySelector("#homeButton");
+const menuButton = document.querySelector("#menuButton");
+const ordersButton = document.querySelector("#ordersButton");
+const settingsButton = document.querySelector("#settingsButton");
+const themeToggleSidebarButton = document.querySelector(
+  "#themeToggleSidebarButton",
+);
+const themeToggleIcon = document.querySelector("#themeToggleIcon");
+
+const THEME_STORAGE_KEY = "streetbite-theme";
 
 function applyTheme(theme) {
-  const normalizedTheme = theme === 'dark' ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', normalizedTheme);
+  const normalizedTheme = theme === "dark" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", normalizedTheme);
   localStorage.setItem(THEME_STORAGE_KEY, normalizedTheme);
   updateThemeControls(normalizedTheme);
 }
 
 function getCurrentTheme() {
-  return localStorage.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light';
+  return localStorage.getItem(THEME_STORAGE_KEY) === "dark" ? "dark" : "light";
 }
 
 function toggleTheme() {
-  const nextTheme = getCurrentTheme() === 'dark' ? 'light' : 'dark';
+  const nextTheme = getCurrentTheme() === "dark" ? "light" : "dark";
   applyTheme(nextTheme);
   return nextTheme;
 }
 
 function updateThemeControls(theme) {
-  const isDark = theme === 'dark';
+  const isDark = theme === "dark";
 
   if (themeToggleSidebarButton) {
-    themeToggleSidebarButton.setAttribute('aria-pressed', String(isDark));
+    themeToggleSidebarButton.setAttribute("aria-pressed", String(isDark));
     themeToggleSidebarButton.setAttribute(
-      'aria-label',
-      isDark ? 'Voltar para modo claro' : 'Ativar modo escuro',
+      "aria-label",
+      isDark ? "Voltar para modo claro" : "Ativar modo escuro",
     );
   }
 
   if (themeToggleIcon) {
-    themeToggleIcon.textContent = isDark ? '☀' : '☾';
+    themeToggleIcon.textContent = isDark ? "☀" : "☾";
   }
 
-  const themeLabel = document.querySelector('#themeLabel');
+  const themeLabel = document.querySelector("#themeLabel");
   if (themeLabel) {
-    themeLabel.textContent = `Tema atual: ${isDark ? 'Escuro' : 'Claro'}`;
+    themeLabel.textContent = `Tema atual: ${isDark ? "Escuro" : "Claro"}`;
   }
 }
 
@@ -57,37 +60,37 @@ applyTheme(getCurrentTheme());
 
 const pages = {
   home: {
-    html: 'Iframes/home.html',
-    script: '../Scripts/home.js',
+    html: "Iframes/home.html",
+    script: "../Scripts/home.js",
     module: false,
-    css: '../Styles/home.css',
+    css: "../Styles/home.css",
   },
   menu: {
-    html: 'Iframes/menu.html',
-    script: '../Scripts/menu.js',
+    html: "Iframes/menu.html",
+    script: "../Scripts/menu.js",
     module: true,
-    css: '../Styles/menu.css',
+    css: "../Styles/menu.css",
   },
   requests: {
-    html: 'Iframes/requests.html',
-    script: '../Scripts/requests.js',
+    html: "Iframes/requests.html",
+    script: "../Scripts/requests.js",
     module: true,
-    css: '../Styles/requests.css',
+    css: "../Styles/requests.css",
   },
   settings: {
-    html: 'Iframes/settings.html',
-    script: '../Scripts/settings.js',
+    html: "Iframes/settings.html",
+    script: "../Scripts/settings.js",
     module: false,
-    css: '../Styles/settings.css',
+    css: "../Styles/settings.css",
   },
 };
 
 // Map href filenames to page keys for internal link interception
 const hrefToPageKey = {
-  'home.html': 'home',
-  'menu.html': 'menu',
-  'requests.html': 'requests',
-  'settings.html': 'settings',
+  "home.html": "home",
+  "menu.html": "menu",
+  "requests.html": "requests",
+  "settings.html": "settings",
 };
 
 const pageToSidebarButton = {
@@ -101,10 +104,10 @@ let currentPageScript = null;
 
 function updateSidebarActive(pageKey) {
   const buttons = [homeButton, menuButton, ordersButton, settingsButton];
-  buttons.forEach((button) => button?.classList.remove('is-active'));
+  buttons.forEach((button) => button?.classList.remove("is-active"));
 
   const activeButton = pageToSidebarButton[pageKey];
-  activeButton?.classList.add('is-active');
+  activeButton?.classList.add("is-active");
 }
 
 async function loadPage(pageKey) {
@@ -113,33 +116,41 @@ async function loadPage(pageKey) {
 
   updateSidebarActive(pageKey);
 
-  const response = await fetch(page.html);
-  const html = await response.text();
+  const loadingToken = loadingProgress.start({
+    message: "Carregando tela...",
+  });
 
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-  contentArea.innerHTML = doc.body.innerHTML;
+  try {
+    const response = await fetch(page.html);
+    const html = await response.text();
 
-  // Swap page-specific CSS
-  const pageCSSLink = document.getElementById('pageCSS');
-  if (pageCSSLink && page.css) {
-    pageCSSLink.href = page.css;
-  }
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    contentArea.innerHTML = doc.body.innerHTML;
 
-  // Remove previous injected page script
-  if (currentPageScript) {
-    currentPageScript.remove();
-    currentPageScript = null;
-  }
+    // Swap page-specific CSS
+    const pageCSSLink = document.getElementById("pageCSS");
+    if (pageCSSLink && page.css) {
+      pageCSSLink.href = page.css;
+    }
 
-  // Inject page script if defined
-  if (page.script) {
-    const script = document.createElement('script');
-    // Cache-bust so module scripts re-execute on each tab switch
-    script.src = page.script + '?t=' + Date.now();
-    if (page.module) script.type = 'module';
-    document.body.appendChild(script);
-    currentPageScript = script;
+    // Remove previous injected page script
+    if (currentPageScript) {
+      currentPageScript.remove();
+      currentPageScript = null;
+    }
+
+    // Inject page script if defined
+    if (page.script) {
+      const script = document.createElement("script");
+      // Cache-bust so module scripts re-execute on each tab switch
+      script.src = page.script + "?t=" + Date.now();
+      if (page.module) script.type = "module";
+      document.body.appendChild(script);
+      currentPageScript = script;
+    }
+  } finally {
+    loadingProgress.finish(loadingToken);
   }
 }
 
@@ -147,8 +158,8 @@ async function loadPage(pageKey) {
 window.loadPage = loadPage;
 
 // Intercept internal navigation links inside contentArea
-contentArea.addEventListener('click', (e) => {
-  const pageButton = e.target.closest('button[data-load-page]');
+contentArea.addEventListener("click", (e) => {
+  const pageButton = e.target.closest("button[data-load-page]");
   if (pageButton) {
     const pageKey = pageButton.dataset.loadPage;
     if (pageKey && pages[pageKey]) {
@@ -158,22 +169,22 @@ contentArea.addEventListener('click', (e) => {
     }
   }
 
-  const scrollButton = e.target.closest('button[data-scroll-target]');
+  const scrollButton = e.target.closest("button[data-scroll-target]");
   if (scrollButton) {
     const targetSelector = scrollButton.dataset.scrollTarget;
     if (targetSelector) {
       const targetElement = contentArea.querySelector(targetSelector);
       if (targetElement) {
         e.preventDefault();
-        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
         return;
       }
     }
   }
 
-  const anchor = e.target.closest('a[href]');
+  const anchor = e.target.closest("a[href]");
   if (!anchor) return;
-  const filename = anchor.getAttribute('href').split('/').pop();
+  const filename = anchor.getAttribute("href").split("/").pop();
   const pageKey = hrefToPageKey[filename];
   if (pageKey) {
     e.preventDefault();
@@ -181,28 +192,28 @@ contentArea.addEventListener('click', (e) => {
   }
 });
 
-homeButton.addEventListener('click', (e) => {
+homeButton.addEventListener("click", (e) => {
   e.preventDefault();
-  loadPage('home');
+  loadPage("home");
 });
-menuButton.addEventListener('click', (e) => {
+menuButton.addEventListener("click", (e) => {
   e.preventDefault();
-  loadPage('menu');
+  loadPage("menu");
 });
-ordersButton.addEventListener('click', (e) => {
+ordersButton.addEventListener("click", (e) => {
   e.preventDefault();
-  loadPage('requests');
+  loadPage("requests");
 });
-settingsButton.addEventListener('click', (e) => {
+settingsButton.addEventListener("click", (e) => {
   e.preventDefault();
-  loadPage('settings');
+  loadPage("settings");
 });
 
 if (themeToggleSidebarButton) {
-  themeToggleSidebarButton.addEventListener('click', () => {
+  themeToggleSidebarButton.addEventListener("click", () => {
     toggleTheme();
   });
 }
 
 // Load home page on startup
-loadPage('home');
+loadPage("home");

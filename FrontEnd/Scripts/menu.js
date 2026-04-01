@@ -1,4 +1,5 @@
 import ApiService from "./service.js";
+import snackbar from "./components/snackbar.js";
 
 (() => {
   const api = new ApiService();
@@ -165,16 +166,17 @@ import ApiService from "./service.js";
         const produtoId = produto.id ?? produto.produtoId;
 
         if (produtoId == null) {
-          alert("Não foi possível identificar o item selecionado.");
+          snackbar.warning("Não foi possível identificar o item selecionado.");
           return;
         }
 
         try {
           await api.deleteProduto(produtoId);
           grid.remove();
+          snackbar.success("Item removido com sucesso.");
         } catch (error) {
           console.error("Erro ao excluir produto:", error);
-          alert(error.message || "Não foi possível excluir o item.");
+          snackbar.error(error.message || "Não foi possível excluir o item.");
         }
       });
 
@@ -190,7 +192,7 @@ import ApiService from "./service.js";
       renderProducts(Array.isArray(produtos) ? produtos : []);
     } catch (error) {
       console.error("Erro ao carregar produtos:", error);
-      alert(error.message || "Não foi possível carregar os produtos.");
+      snackbar.error(error.message || "Não foi possível carregar os produtos.");
     }
   }
 
@@ -200,7 +202,7 @@ import ApiService from "./service.js";
     const categoria = selectCategory.value;
 
     if (!nome || !preco || !categoria) {
-      alert("Preencha nome, categoria e preço antes de continuar.");
+      snackbar.warning("Preencha nome, categoria e preço antes de continuar.");
       return;
     }
 
@@ -213,15 +215,17 @@ import ApiService from "./service.js";
     try {
       if (editMode && editingItemId != null) {
         await api.updateProduto(editingItemId, payload);
+        snackbar.success("Item atualizado com sucesso.");
       } else {
         await api.createProduto(payload);
+        snackbar.success("Item criado com sucesso.");
       }
 
       closeWizard();
       await window.loadPage("menu");
     } catch (error) {
       console.error("Erro ao salvar produto:", error);
-      alert(error.message || "Não foi possível salvar o item.");
+      snackbar.error(error.message || "Não foi possível salvar o item.");
     }
   }
 

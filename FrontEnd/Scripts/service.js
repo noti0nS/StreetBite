@@ -1,12 +1,14 @@
-const DEFAULT_BASE_URL = "http://localhost:5109";
+import loadingProgress from './components/loadingProgress.js';
+
+const DEFAULT_BASE_URL = 'http://localhost:5109';
 
 class ApiService {
   constructor(baseUrl = DEFAULT_BASE_URL) {
-    this.baseUrl = baseUrl.replace(/\/$/, "");
+    this.baseUrl = baseUrl.replace(/\/$/, '');
   }
 
   buildUrl(endpoint) {
-    const normalizedEndpoint = endpoint.startsWith("/")
+    const normalizedEndpoint = endpoint.startsWith('/')
       ? endpoint
       : `/${endpoint}`;
     return `${this.baseUrl}${normalizedEndpoint}`;
@@ -30,16 +32,16 @@ class ApiService {
     if (
       payload == null ||
       Array.isArray(payload) ||
-      typeof payload !== "object"
+      typeof payload !== 'object'
     ) {
       return payload;
     }
 
-    if (Object.prototype.hasOwnProperty.call(payload, "data")) {
+    if (Object.prototype.hasOwnProperty.call(payload, 'data')) {
       return payload.data;
     }
 
-    if (Object.prototype.hasOwnProperty.call(payload, "Data")) {
+    if (Object.prototype.hasOwnProperty.call(payload, 'Data')) {
       return payload.Data;
     }
 
@@ -51,18 +53,18 @@ class ApiService {
       return fallbackMessage;
     }
 
-    if (typeof payload === "string") {
+    if (typeof payload === 'string') {
       return payload;
     }
 
     const message = payload.message ?? payload.Message;
-    if (typeof message === "string" && message.trim()) {
+    if (typeof message === 'string' && message.trim()) {
       return message;
     }
 
     const errors = payload.errors ?? payload.Errors;
     if (Array.isArray(errors) && errors.length) {
-      return errors.filter(Boolean).join(" | ");
+      return errors.filter(Boolean).join(' | ');
     }
 
     return fallbackMessage;
@@ -72,26 +74,26 @@ class ApiService {
     if (
       payload == null ||
       Array.isArray(payload) ||
-      typeof payload !== "object"
+      typeof payload !== 'object'
     ) {
       return false;
     }
 
     const message = payload.message ?? payload.Message;
     const hasData =
-      Object.prototype.hasOwnProperty.call(payload, "data") ||
-      Object.prototype.hasOwnProperty.call(payload, "Data");
+      Object.prototype.hasOwnProperty.call(payload, 'data') ||
+      Object.prototype.hasOwnProperty.call(payload, 'Data');
     const success = payload.success ?? payload.Success;
 
     return (
-      (typeof message === "string" && message.trim() && !hasData) ||
+      (typeof message === 'string' && message.trim() && !hasData) ||
       success === false
     );
   }
 
-  async request(endpoint, method = "GET", body = null) {
+  async request(endpoint, method = 'GET', body = null) {
     const headers = {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     };
 
     const options = {
@@ -99,28 +101,60 @@ class ApiService {
       headers,
     };
 
-    if (body) {
+    if (body != null) {
       options.body = JSON.stringify(body);
     }
 
-    const response = await fetch(this.buildUrl(endpoint), options);
-    const payload = await this.readPayload(response);
+    const loadingToken = loadingProgress.start({
+      message: this.getProgressMessage(method),
+    });
 
-    if (!response.ok || this.hasWrappedError(payload)) {
-      throw new Error(
-        this.getErrorMessage(
-          payload,
-          `Erro: ${response.status} - ${response.statusText}`,
-        ),
+    try {
+      const url = this.buildUrl(endpoint);
+      console.log(
+        `Requisição: ${method.toUpperCase()} ${url}`,
+        body ? { payload: body } : {},
       );
+
+      const response = await fetch(url, options);
+      const payload = await this.readPayload(response);
+
+      if (!response.ok || this.hasWrappedError(payload)) {
+        throw new Error(
+          this.getErrorMessage(
+            payload,
+            `Erro: ${response.status} - ${response.statusText}`,
+          ),
+        );
+      }
+
+      return this.unwrapResponse(payload);
+    } finally {
+      loadingProgress.finish(loadingToken);
+    }
+  }
+
+  getProgressMessage(method) {
+    const normalizedMethod = String(method ?? 'GET').toUpperCase();
+
+    if (normalizedMethod === 'POST') {
+      return 'Enviando dados...';
     }
 
-    return this.unwrapResponse(payload);
+    if (normalizedMethod === 'PATCH' || normalizedMethod === 'PUT') {
+      return 'Atualizando dados...';
+    }
+
+    if (normalizedMethod === 'DELETE') {
+      return 'Removendo dados...';
+    }
+
+    return 'Carregando dados...';
   }
 
   // Métodos específicos para cada entidade
   async getClientes() {
-    return this.request("/api/v1/clientes");
+    return this.request('/api/v1/clientes');
   }
 
   async getClienteById(id) {
@@ -128,19 +162,19 @@ class ApiService {
   }
 
   async createCliente(data) {
-    return this.request("/api/v1/clientes", "POST", data);
+    return this.request('/api/v1/clientes', 'POST', data);
   }
 
   async updateCliente(id, data) {
-    return this.request(`/api/v1/clientes/${id}`, "PATCH", data);
+    return this.request(`/api/v1/clientes/${id}`, 'PATCH', data);
   }
 
   async deleteCliente(id) {
-    return this.request(`/api/v1/clientes/${id}`, "DELETE");
+    return this.request(`/api/v1/clientes/${id}`, 'DELETE');
   }
 
   async getComandas() {
-    return this.request("/api/v1/comandas");
+    return this.request('/api/v1/comandas');
   }
 
   async getComandaById(id) {
@@ -148,23 +182,23 @@ class ApiService {
   }
 
   async createComanda() {
-    return this.request("/api/v1/comandas", "POST");
+    return this.request('/api/v1/comandas', 'POST');
   }
 
   async updateComanda(id, data) {
-    return this.request(`/api/v1/comandas/${id}`, "PATCH", data);
+    return this.request(`/api/v1/comandas/${id}`, 'PATCH', data);
   }
 
   async deleteComanda(id) {
-    return this.request(`/api/v1/comandas/${id}`, "DELETE");
+    return this.request(`/api/v1/comandas/${id}`, 'DELETE');
   }
 
   async addItemComanda(data) {
-    return this.request("/api/v1/comandas/item", "POST", data);
+    return this.request('/api/v1/comandas/item', 'POST', data);
   }
 
   async getEnderecos() {
-    return this.request("/api/v1/enderecos");
+    return this.request('/api/v1/enderecos');
   }
 
   async getEnderecoById(id) {
@@ -172,19 +206,19 @@ class ApiService {
   }
 
   async createEndereco(data) {
-    return this.request("/api/v1/enderecos", "POST", data);
+    return this.request('/api/v1/enderecos', 'POST', data);
   }
 
   async updateEndereco(id, data) {
-    return this.request(`/api/v1/enderecos/${id}`, "PATCH", data);
+    return this.request(`/api/v1/enderecos/${id}`, 'PATCH', data);
   }
 
   async deleteEndereco(id) {
-    return this.request(`/api/v1/enderecos/${id}`, "DELETE");
+    return this.request(`/api/v1/enderecos/${id}`, 'DELETE');
   }
 
   async getProdutos() {
-    return this.request("/api/v1/produtos");
+    return this.request('/api/v1/produtos');
   }
 
   async getProdutoById(id) {
@@ -192,15 +226,15 @@ class ApiService {
   }
 
   async createProduto(data) {
-    return this.request("/api/v1/produtos", "POST", data);
+    return this.request('/api/v1/produtos', 'POST', data);
   }
 
   async updateProduto(id, data) {
-    return this.request(`/api/v1/produtos/${id}`, "PATCH", data);
+    return this.request(`/api/v1/produtos/${id}`, 'PATCH', data);
   }
 
   async deleteProduto(id) {
-    return this.request(`/api/v1/produtos/${id}`, "DELETE");
+    return this.request(`/api/v1/produtos/${id}`, 'DELETE');
   }
 }
 

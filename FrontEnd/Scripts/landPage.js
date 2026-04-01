@@ -1,4 +1,5 @@
 import ApiService from "./service.js";
+import snackbar from "./components/snackbar.js";
 
 const api = new ApiService();
 const THEME_STORAGE_KEY = "streetbite-theme";
@@ -13,5 +14,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.log(comandas);
   } catch (error) {
     console.error("Erro ao carregar comandas:", error);
+    snackbar.error(error.message || "Não foi possível carregar as comandas.");
   }
 });

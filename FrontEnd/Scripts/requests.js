@@ -1,4 +1,6 @@
 import ApiService from "./service.js";
+import loadingProgress from "./components/loadingProgress.js";
+import snackbar from "./components/snackbar.js";
 
 (() => {
   const api = new ApiService();
@@ -142,19 +144,19 @@ import ApiService from "./service.js";
       });
     } catch (error) {
       console.error("Erro ao carregar produtos:", error);
-      alert(error.message || "Não foi possível carregar os produtos.");
+      snackbar.error(error.message || "Não foi possível carregar os produtos.");
       throw error;
     }
   }
 
   async function createOrderFromWizard() {
     if (!orderPayment.value) {
-      alert("Selecione o método de pagamento.");
+      snackbar.warning("Selecione o método de pagamento.");
       return;
     }
 
     if (!cartItems.length) {
-      alert("Adicione pelo menos um item ao pedido.");
+      snackbar.warning("Adicione pelo menos um item ao pedido.");
       return;
     }
 
@@ -169,7 +171,7 @@ import ApiService from "./service.js";
       }
 
       if (!comandaId) {
-        alert("Não foi possível identificar a nova comanda criada.");
+        snackbar.error("Não foi possível identificar a nova comanda criada.");
         return;
       }
 
@@ -187,11 +189,12 @@ import ApiService from "./service.js";
         metodoDePagamento: orderPayment.value,
       });
 
+      snackbar.success("Pedido criado com sucesso.");
       closeWizard();
       await window.loadPage("requests");
     } catch (error) {
       console.error("Erro ao criar pedido:", error);
-      alert(error.message || "Não foi possível criar o pedido.");
+      snackbar.error(error.message || "Não foi possível criar o pedido.");
     }
   }
 
@@ -201,7 +204,7 @@ import ApiService from "./service.js";
       renderOrders(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Erro ao carregar pedidos:", error);
-      alert(error.message || "Não foi possível carregar os pedidos.");
+      snackbar.error(error.message || "Não foi possível carregar os pedidos.");
     }
   }
 
@@ -324,12 +327,14 @@ import ApiService from "./service.js";
         status.textContent = "Pedido concluído";
         status.classList.add("statusDone");
         actions.remove();
+        snackbar.success("Pedido marcado como concluído.");
       });
 
       orderDeleteButton.addEventListener("click", () => {
         status.textContent = "Pedido cancelado";
         status.classList.add("statusCanceled");
         actions.remove();
+        snackbar.warning("Pedido cancelado.");
       });
 
       actions.appendChild(orderDoneButton);
@@ -393,7 +398,7 @@ import ApiService from "./service.js";
   wizardNext.addEventListener("click", () => {
     if (currentStep === 1) {
       if (!orderType.value) {
-        alert("Selecione o tipo de atendimento para continuar.");
+        snackbar.warning("Selecione o tipo de atendimento para continuar.");
         return;
       }
       showWizardStep(2);
@@ -420,25 +425,31 @@ import ApiService from "./service.js";
     orderNumber.value = "";
   });
 
-  orderCep.addEventListener("change", () => {
+  orderCep.addEventListener("change", async () => {
     const cepValue = orderCep.value;
     if (!cepValue || orderType.value === "retirada") return;
 
-    const url = `https://opencep.com/v1/${cepValue}`;
-    const request = new XMLHttpRequest();
-    request.open("GET", url);
-    request.send();
+    const loadingToken = loadingProgress.start({
+      message: "Buscando endereço pelo CEP...",
+    });
 
-    request.onload = function () {
-      if (request.status === 200) {
-        const endereco = JSON.parse(request.response);
-        orderStreet.value = endereco.logradouro || "";
-        orderDistrict.value = endereco.bairro || "";
-      } else {
-        orderStreet.value = "CEP INVÁLIDO";
-        orderDistrict.value = "CEP INVÁLIDO";
+    try {
+      const response = await fetch(`https://opencep.com/v1/${cepValue}`);
+
+      if (!response.ok) {
+        throw new Error("CEP inválido.");
       }
-    };
+
+      const endereco = await response.json();
+      orderStreet.value = endereco.logradouro || "";
+      orderDistrict.value = endereco.bairro || "";
+    } catch {
+      orderStreet.value = "CEP INVÁLIDO";
+      orderDistrict.value = "CEP INVÁLIDO";
+      snackbar.warning("Não foi possível localizar o CEP informado.");
+    } finally {
+      loadingProgress.finish(loadingToken);
+    }
   });
 
   addOrderItem.addEventListener("click", () => {
@@ -446,12 +457,12 @@ import ApiService from "./service.js";
     const quantity = Number(orderQuantity.value || 1);
 
     if (!productId) {
-      alert("Selecione um item do cardápio.");
+      snackbar.warning("Selecione um item do cardápio.");
       return;
     }
 
     if (quantity < 1) {
-      alert("A quantidade deve ser maior que zero.");
+      snackbar.warning("A quantidade deve ser maior que zero.");
       return;
     }
 
@@ -471,6 +482,7 @@ import ApiService from "./service.js";
     });
 
     renderCart();
+    snackbar.info("Item adicionado ao pedido.");
   });
 
   loadOrders();
