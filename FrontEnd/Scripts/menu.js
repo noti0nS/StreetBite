@@ -1,5 +1,10 @@
 import ApiService from "./service.js";
 import snackbar from "./components/snackbar.js";
+import {
+  getProductCategoryImage,
+  normalizeProductCategory,
+  serializeProductCategory,
+} from "./productCategories.js";
 
 (() => {
   const api = new ApiService();
@@ -26,46 +31,12 @@ import snackbar from "./components/snackbar.js";
   let editMode = false;
   let editingItemId = null;
 
-  function getProductImageByNameOrCategory(nome, categoria) {
-    const normalizedName = (nome || "").trim().toLowerCase();
-    const normalizedCategory = String(categoria ?? "")
-      .trim()
-      .toUpperCase();
-
-    if (normalizedName === "big sb") return "../Imgs/images/items/bigSB";
-    if (normalizedName === "big sb bacon")
-      return "../Imgs/images/items/bigSBbacon";
-    if (normalizedName === "big sb cheddar")
-      return "../Imgs/images/items/bigSBCheddar";
-    if (normalizedName === "classic sb")
-      return "../Imgs/images/items/cheeseClassic";
-
-    if (normalizedCategory === "BEBIDA")
-      return "../Imgs/images/eachCategory/bebida.jpg";
-    if (normalizedCategory === "ACOMPANHAMENTO")
-      return "../Imgs/images/eachCategory/acompanhamento.jpg";
-    if (normalizedCategory === "COMBO")
-      return "../Imgs/images/eachCategory/combo.jpg";
-    return "../Imgs/images/eachCategory/lanche.jpg";
-  }
-
   function resetWizardForm() {
     inputName.value = "";
     selectCategory.value = "Lanche";
     inputPrice.value = "";
     inputDesc.value = "";
     imageImg.src = "";
-  }
-
-  function normalizeCategoryValue(categoria) {
-    const normalizedCategory = String(categoria ?? "")
-      .trim()
-      .toUpperCase();
-
-    if (normalizedCategory === "ACOMPANHAMENTO") return "Acompanhamento";
-    if (normalizedCategory === "BEBIDA") return "Bebida";
-    if (normalizedCategory === "COMBO") return "Combo";
-    return "Lanche";
   }
 
   function openWizard(mode, produto = null) {
@@ -76,7 +47,7 @@ import snackbar from "./components/snackbar.js";
       wizardTitle.textContent = "Assistente de Edição de Item";
       wizardSubtitle.textContent = "Atualize os dados do item selecionado.";
       inputName.value = produto.nome ?? "";
-      selectCategory.value = normalizeCategoryValue(produto.categoria);
+      selectCategory.value = normalizeProductCategory(produto.categoria) || "Lanche";
       inputPrice.value = produto.preco ?? "";
       inputDesc.value = produto.descricao ?? "";
       wizardNext.textContent = "Salvar Edição";
@@ -125,13 +96,10 @@ import snackbar from "./components/snackbar.js";
       buttonsGridDiv.style.display = "flex";
       buttonsGridDiv.style.gap = "10px";
       productName.textContent = produto.nome;
-      productCategory.textContent = produto.categoria;
+      productCategory.textContent = normalizeProductCategory(produto.categoria);
       productPrice.textContent = "R$" + produto.preco;
 
-      itemImage.src = getProductImageByNameOrCategory(
-        produto.nome,
-        produto.categoria,
-      );
+      itemImage.src = getProductCategoryImage(produto.categoria, produto.nome);
       itemImage.alt = `Imagem do item ${productName.textContent}`;
 
       editImg.src = "../Imgs/icons/editIcon.svg";
@@ -208,8 +176,8 @@ import snackbar from "./components/snackbar.js";
 
     const payload = {
       nome,
-      preco,
-      categoria,
+      preco: Number(preco),
+      categoria: serializeProductCategory(categoria),
     };
 
     try {

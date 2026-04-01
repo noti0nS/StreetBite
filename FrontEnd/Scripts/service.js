@@ -226,11 +226,11 @@ class ApiService {
   }
 
   async createProduto(data) {
-    return this.request('/api/v1/produtos', 'POST', data);
+    return this.request('/api/v1/produtos', 'POST', { data });
   }
 
   async updateProduto(id, data) {
-    return this.request(`/api/v1/produtos/${id}`, 'PATCH', data);
+    return this.request(`/api/v1/produtos/${id}`, 'PATCH', { data });
   }
 
   async deleteProduto(id) {

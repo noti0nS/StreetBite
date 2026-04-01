@@ -1,6 +1,7 @@
 import ApiService from "./service.js";
 import loadingProgress from "./components/loadingProgress.js";
 import snackbar from "./components/snackbar.js";
+import { getProductCategoryImage } from "./productCategories.js";
 
 (() => {
   const api = new ApiService();
@@ -35,33 +36,6 @@ import snackbar from "./components/snackbar.js";
 
   function formatCurrency(value) {
     return Number(value).toFixed(2);
-  }
-
-  function normalizeText(value) {
-    return String(value ?? "")
-      .trim()
-      .toUpperCase();
-  }
-
-  function categoryImage(category, nome) {
-    const normalizedName = (nome || "").trim().toLowerCase();
-    const normalizedCategory = normalizeText(category);
-
-    if (normalizedName === "big sb") return "../Imgs/images/items/bigSB";
-    if (normalizedName === "big sb bacon")
-      return "../Imgs/images/items/bigSBbacon";
-    if (normalizedName === "big sb cheddar")
-      return "../Imgs/images/items/bigSBCheddar";
-    if (normalizedName === "classic sb")
-      return "../Imgs/images/items/cheeseClassic";
-
-    if (normalizedCategory === "BEBIDA")
-      return "../Imgs/images/eachCategory/bebida.jpg";
-    if (normalizedCategory === "ACOMPANHAMENTO")
-      return "../Imgs/images/eachCategory/acompanhamento.jpg";
-    if (normalizedCategory === "COMBO")
-      return "../Imgs/images/eachCategory/combo.jpg";
-    return "../Imgs/images/eachCategory/lanche.jpg";
   }
 
   function showWizardStep(step) {
@@ -275,7 +249,7 @@ import snackbar from "./components/snackbar.js";
 
         const itemImage = document.createElement("img");
         itemImage.className = "orderItemImage";
-        itemImage.src = categoryImage(item.categoria, item.produtoNome);
+        itemImage.src = getProductCategoryImage(item.categoria, item.produtoNome);
         itemImage.alt = `Imagem do item ${item.produtoNome}`;
 
         const itemInfo = document.createElement("div");
@@ -478,7 +452,7 @@ import snackbar from "./components/snackbar.js";
       categoria: selectedProduct.categoria,
       quantidade: quantity,
       precoUnitario: Number(selectedProduct.preco),
-      image: categoryImage(selectedProduct.categoria, selectedProduct.nome),
+      image: getProductCategoryImage(selectedProduct.categoria, selectedProduct.nome),
     });
 
     renderCart();
