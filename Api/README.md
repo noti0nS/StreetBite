@@ -67,6 +67,8 @@ Api/src/
 - `GlobalExceptionHandler`;
 - serviços de produto, comanda e geração de código.
 
+Na inicialização, a API também aplica automaticamente as migrations pendentes do EF Core antes de aceitar requisições.
+
 ### 3. Pipeline HTTP
 
 `WebApplicationExtensions` habilita:
@@ -190,12 +192,6 @@ docker compose up --build
 cd Api
 dotnet build src/StreetBite.Api/StreetBite.Api.csproj
 dotnet run --project src/StreetBite.Api/StreetBite.Api.csproj
-```
-
-Para aplicar migrations:
-
-```bash
-dotnet ef database update --project src/StreetBite.Infra --startup-project src/StreetBite.Api
 ```
 
 ## Configuração
