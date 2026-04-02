@@ -120,7 +120,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
-  align-items: stretch;
+  align-items: start;
 }
 
 .grid {
@@ -140,6 +140,7 @@ body {
   color: var(--card);
   box-shadow: 0 12px 28px rgb(0 0 0 / 10%);
   justify-self: center;
+  align-self: start;
 }
 
 @keyframes gridAnim {
@@ -184,7 +185,7 @@ body {
   background: rgb(255 255 255 / 10%);
 }
 
-.main img {
+.itemImage img {
   object-fit: fill;
   width: 100%;
   height: 100%;
@@ -204,6 +205,18 @@ body {
   text-align: center;
 }
 
+.productCategory {
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 88%);
+  background: rgb(255 255 255 / 14%);
+  border: 1px solid rgb(255 255 255 / 22%);
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+
 .gridActions {
   width: 100%;
   display: flex;
@@ -214,12 +227,14 @@ body {
 }
 
 .gridEditButton {
-  flex: 1;
+  flex: 0 1 180px;
+  min-width: 150px;
   justify-content: center;
   background: var(--secondary-soft);
   color: var(--secondary);
   border-color: transparent;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .gridEditButton:hover {
@@ -232,6 +247,13 @@ body {
   min-width: 44px;
   padding: 0;
   background: rgb(255 255 255 / 12%);
+}
+
+.gridActions .editButton img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  display: block;
 }
 
 .gridDeleteButton img {
@@ -275,6 +297,10 @@ body {
   font-size: 14px;
   line-height: 1.45;
   color: rgb(255 255 255 / 92%);
+}
+
+.productDescription:not([open]) .productDescriptionText {
+  display: none;
 }
 
 .wizardSection {

@@ -80,12 +80,13 @@ import {
   function renderProducts(produtos) {
     gridSection.innerHTML = '';
 
-    produtos.forEach((produto) => {
+    produtos.forEach((produto, index) => {
       const grid = document.createElement('div');
       const productName = document.createElement('h2');
       const itemImageDiv = document.createElement('div');
       const itemImage = document.createElement('img');
       const productPrice = document.createElement('h3');
+      const productCategory = document.createElement('p');
       const editButton = document.createElement('button');
       const editImg = document.createElement('img');
       const deleteButton = document.createElement('button');
@@ -94,6 +95,8 @@ import {
       const descriptionDetails = document.createElement('details');
       const descriptionSummary = document.createElement('summary');
       const descriptionText = document.createElement('p');
+      const produtoId = produto.id ?? produto.produtoId ?? `item-${index}`;
+      const descriptionId = `item-desc-${produtoId}`;
 
       grid.className = 'grid';
       itemImageDiv.className = 'itemImage';
@@ -103,14 +106,18 @@ import {
       deleteButton.classList.add('gridDeleteButton');
       productName.className = 'productName';
       productPrice.className = 'productPrice';
+      productCategory.className = 'productCategory';
       buttonsGridDiv.className = 'gridActions';
       descriptionDetails.className = 'productDescription';
       descriptionText.className = 'productDescriptionText';
+      descriptionDetails.dataset.itemId = String(produtoId);
 
       productName.textContent = produto.nome;
       productPrice.textContent = currencyFormatter.format(
         Number(produto.preco ?? 0),
       );
+      productCategory.textContent =
+        normalizeProductCategory(produto.categoria) || 'Sem categoria';
 
       itemImage.src = getProductCategoryImage(produto.categoria, produto.nome);
       itemImage.alt = `Imagem do item ${productName.textContent}`;
@@ -135,13 +142,25 @@ import {
       );
 
       descriptionSummary.textContent = 'Descrição';
+      descriptionSummary.setAttribute('role', 'button');
+      descriptionSummary.setAttribute('aria-controls', descriptionId);
+      descriptionSummary.setAttribute('aria-expanded', 'false');
+      descriptionText.id = descriptionId;
       descriptionText.textContent =
         produto.descricao?.trim() || 'Sem descrição cadastrada.';
+
+      descriptionDetails.addEventListener('toggle', () => {
+        descriptionSummary.setAttribute(
+          'aria-expanded',
+          String(descriptionDetails.open),
+        );
+      });
 
       grid.appendChild(productName);
       itemImageDiv.appendChild(itemImage);
       grid.appendChild(itemImageDiv);
       grid.appendChild(productPrice);
+      grid.appendChild(productCategory);
       descriptionDetails.appendChild(descriptionSummary);
       descriptionDetails.appendChild(descriptionText);
       grid.appendChild(descriptionDetails);
