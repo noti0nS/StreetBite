@@ -1,106 +1,56 @@
-# StreetBite – Copilot Instructions
+# StreetBite Copilot Instructions
 
-## Project Overview
+## Project shape
 
-Food truck management platform for sales, menu, orders, and customers.
+StreetBite is a food-truck management web app with a .NET 10 backend and a static vanilla-JS frontend.
 
-- **Backend**: ASP.NET Core / .NET 10, C#, EF Core, PostgreSQL
-- **Frontend**: Vanilla HTML + CSS + JS, no build system — served via Live Server
+- `Api/src/StreetBite.Api` is the HTTP layer: Minimal APIs, endpoint grouping, request/response mapping, and app startup.
+- `Api/src/StreetBite.Core` holds entities, enums, constants, validation contracts, and the `Result`/`Result<T>` model.
+- `Api/src/StreetBite.Infra` contains EF Core persistence, fluent configurations, and migrations for PostgreSQL.
+- `FrontEnd/` is a browser app served as static files; `streetBite.js` is the shell that loads page HTML and page scripts dynamically.
 
----
+## Commands
 
-## Build & Run Commands
-
-### Backend
-
-All commands run from `Api/`.
+Backend:
 
 ```bash
-# Run the application
-dotnet run --project src/StreetBite.Api/StreetBite.Api.csproj
-
-# Build the API
-dotnet build src/StreetBite.Api/StreetBite.Api.csproj
-
-# Run tests when test projects are present
-dotnet test
+dotnet build Api/src/StreetBite.Api/StreetBite.Api.csproj
+dotnet run --project Api/src/StreetBite.Api/StreetBite.Api.csproj
 ```
 
-The API entrypoint lives in `Api/src/StreetBite.Api/Program.cs`. Shared domain types live in `StreetBite.Core`, and EF Core persistence lives in `StreetBite.Infra`. Local development uses PostgreSQL from `Api/src/StreetBite.Api/appsettings.json`.
+Frontend:
 
-### Frontend
+```bash
+cd FrontEnd
+npm install
+npx prettier --check .
+npx prettier --write Scripts/menu.js
+```
 
-Open any `.html` file with Live Server (VS Code extension). The backend CORS config only allows **`http://127.0.0.1:5500`** — use that origin, not `localhost:5500`.
+Full stack:
 
----
+```bash
+docker compose up --build
+```
+
+There is no test project in the current tree, so there is no repo-specific single-test command yet.
 
 ## Architecture
 
-```text
-Api/src/
-├── StreetBite.Api/         HTTP entrypoint, endpoint mappings, API responses, and configuration
-│   ├── Application/        Minimal API route groups and shared web setup
-│   └── Views/              API response/view models
-├── StreetBite.Core/        Domain entities, enums, and shared result models
-└── StreetBite.Infra/       EF Core DbContext and entity configurations
+- `Program.cs` only wires shared services and maps the feature groups.
+- `ProdutosEndpoints` and `ComandasEndpoints` own the route surfaces; item routes live under the comanda group.
+- Services return `Result` / `Result<T>` and endpoints translate those into `ApiResponse<T>` or `PagedApiResponse<T>`.
+- `ValidationRequestFilter` runs for any endpoint argument implementing `IValidation`.
+- `GlobalExceptionHandler` returns a JSON `ApiResponse<object>` for unhandled failures.
+- EF Core mappings use fluent configs in `Infra/Data/Configurations`; `BaseEntityConfiguration` defines the shared audit columns.
+- Frontend API calls go through `FrontEnd/Scripts/service.js`, which unwraps `data` responses and surfaces wrapped errors.
 
-FrontEnd/
-├── landPage.html           Entry page
-├── Pages/Iframes/          Per-feature HTML pages (home, menu, requests, createNewOrder, settings)
-├── Scripts/                One JS file per page + service.js (ApiService class) + requests.js
-└── Styles/                 One CSS file per page
-```
+## Conventions
 
-### Core Domain Model
-
-- **Comanda** (order): has many `Item`s, optionally linked to a `Cliente`. Carries `Status`, `MetodoDePagamento`, auto-generated `CodigoPedido`, and computed `Subtotal`.
-- **Item**: join between `Comanda` and `Produto`. `PrecoUnitario` is automatically set from `Produto.Preco` when `Produto` is assigned. `GetTotalItem()` = `PrecoUnitario × Quantidade`.
-- **Produto**: menu item with `Nome`, `Preco`, and `Categoria` (enum).
-- **Cliente**: customer with `Nome`, `Email`/`Telefone`, and a list of `Endereco`.
-
-### Request/Response Flow
-
-Minimal API route groups live under `StreetBite.Api/Application/*` and are wired from `Program.cs`. Shared response models live under `StreetBite.Api/Views/Responses`, and domain operations return `Result` / `Result<T>` from `StreetBite.Core/Models` where appropriate.
-
-### Entity Framework Core Relationships
-
-EF Core mappings live under `StreetBite.Infra/Data/Configurations` and are applied from `StreetBiteDbContext`. Keep relationship and table configuration in those classes instead of scattering mapping rules across the application.
-
----
-
-## Key Conventions
-
-### Domain Language: Portuguese
-
-All entity names, field names, enum values, service methods, and endpoint paths are in Portuguese. Follow this when adding new code:
-
-- Order/bill → `Comanda`; Product → `Produto`; Customer → `Cliente`; Address → `Endereco`; Item stays `Item`
-
-### Enums
-
-- `EComandaStatus`: `Pendente`, `EmProducao`, `Finalizado`
-- `EMetodoPagamento`: `Credito`, `Debito`, `Dinheiro`, `Pix`
-- `ECategorias`: `Acompanhamento`, `Bebida`, `Combo`, `Lanche`
-
-### C# / .NET Conventions
-
-Use nullable reference types and implicit usings as configured in the project files. Prefer constructor injection, `sealed` entities where the codebase already does, and extension methods for service registration / pipeline setup (`AddApiServices`, `UseApiConfiguration`, `Map*Endpoints`).
-
-### Frontend API Access
-
-`FrontEnd/Scripts/service.js` exports an `ApiService` class (base URL injected in constructor). Import it with ES module syntax:
-
-```js
-import ApiService from "./service.js";
-const api = new ApiService("http://localhost:5109");
-```
-
-Older/simpler pages call `fetch('http://localhost:5109/api/v1/...')` directly. Prefer `ApiService` for new pages.
-
-### CEP / Address Lookup
-
-`createNewOrder.js` calls `https://opencep.com/v1/{cep}` (external API) to auto-fill street and neighborhood fields from a Brazilian postal code.
-
-### Category Images
-
-Frontend maps `ECategorias` values to static images in `FrontEnd/Imgs/images/eachCategory/` (`bebida.jpg`, `lanche.jpg`, `combo.jpg`, `acompanhamento.jpg`).
+- Keep domain terms in Portuguese: `Produto`, `Comanda`, `Item`, `Cliente`, `Endereco`.
+- Use `I*` for interfaces and keep concrete services/entities sealed where the codebase already does.
+- Preserve the `/api/v1/...` route shape and the existing response envelope behavior.
+- Product create/update requests from the frontend must be sent as `{ data }` to `/api/v1/produtos`.
+- Category values are normalized through `FrontEnd/Scripts/productCategories.js`; do not duplicate that mapping elsewhere.
+- `streetBite.js` injects `menu.js` and `requests.js` as ES modules, so page scripts that import helpers must keep `type="module"`.
+- Use the `FrontEnd/` path casing exactly.
