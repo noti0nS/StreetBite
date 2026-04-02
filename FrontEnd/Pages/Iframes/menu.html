@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="../../Styles/menu.css" />
-    <script src="../../Scripts/menu.js" defer></script>
+    <script src="../../Scripts/menu.js" type="module"></script>
   </head>
   <body>
     <main class="main">
@@ -15,25 +15,41 @@
           <h2>Lista de Itens contidos no Cardápio</h2>
         </div>
         <nav>
-          <button class="createItem" type="button" aria-label="Criar novo item do cardápio">Criar Novo Item</button>
+          <button
+            class="createItem"
+            type="button"
+            aria-label="Criar novo item do cardápio"
+          >
+            Criar Novo Item
+          </button>
         </nav>
       </section>
       <section class="gridSection"></section>
 
-      <section class="wizardSection" id="itemWizard" aria-label="Assistente de criação e edição de item">
+      <section
+        class="wizardSection"
+        id="itemWizard"
+        aria-label="Assistente de criação e edição de item"
+      >
         <div class="wizardContainer">
           <aside class="wizardVisual" aria-hidden="true">
             <div>
               <h3 class="wizardVisualTitle">StreetBite Studio</h3>
-              <p>Cadastre itens do cardápio em um formulário direto e rápido.</p>
+              <p>
+                Cadastre itens do cardápio em um formulário direto e rápido.
+              </p>
             </div>
             <p class="wizardVisualStep">Cadastro em etapa única</p>
           </aside>
 
           <div class="wizardMain">
             <header class="wizardHeader">
-              <h2 class="wizardTitle" id="wizardTitle">Assistente de Configuração de Item</h2>
-              <p class="wizardSubtitle" id="wizardSubtitle">Preencha os dados para criar ou editar um item do cardápio.</p>
+              <h2 class="wizardTitle" id="wizardTitle">
+                Assistente de Configuração de Item
+              </h2>
+              <p class="wizardSubtitle" id="wizardSubtitle">
+                Preencha os dados para criar ou editar um item do cardápio.
+              </p>
             </header>
 
             <section class="wizardBody">
@@ -43,38 +59,77 @@
                 <div class="wizardGrid">
                   <div>
                     <div class="wizardFieldGroup">
-                      <label class="wizardFieldLabel" for="inputName">Nome</label>
-                      <input class="wizardField" type="text" id="inputName" aria-label="Nome do item" />
+                      <label class="wizardFieldLabel" for="inputName"
+                        >Nome</label
+                      >
+                      <input
+                        class="wizardField"
+                        type="text"
+                        id="inputName"
+                        aria-label="Nome do item"
+                      />
                     </div>
 
                     <div class="wizardFieldGroup">
-                      <label class="wizardFieldLabel" for="selectCategory">Categoria</label>
-                      <select class="wizardField" id="selectCategory" aria-label="Categoria do item">
-                        <option value="LANCHE">Lanche</option>
-                        <option value="ACOMPANHAMENTO">Acompanhamento</option>
-                        <option value="BEBIDA">Bebida</option>
-                        <option value="COMBO">Combo</option>
+                      <label class="wizardFieldLabel" for="selectCategory"
+                        >Categoria</label
+                      >
+                      <select
+                        class="wizardField"
+                        id="selectCategory"
+                        aria-label="Categoria do item"
+                      >
+                        <option value="Lanche">Lanche</option>
+                        <option value="Acompanhamento">Acompanhamento</option>
+                        <option value="Bebida">Bebida</option>
+                        <option value="Combo">Combo</option>
                       </select>
                     </div>
 
                     <div class="wizardFieldGroup">
-                      <label class="wizardFieldLabel" for="inputPrice">Preço</label>
-                      <input class="wizardField" type="number" id="inputPrice" aria-label="Preço do item" />
+                      <label class="wizardFieldLabel" for="inputPrice"
+                        >Preço</label
+                      >
+                      <input
+                        class="wizardField"
+                        type="number"
+                        id="inputPrice"
+                        aria-label="Preço do item"
+                      />
                     </div>
 
                     <div class="wizardFieldGroup">
-                      <label class="wizardFieldLabel" for="inputDesc">Descrição</label>
-                      <textarea class="wizardTextarea" id="inputDesc" placeholder="Descrição do item" aria-label="Descrição do item"></textarea>
+                      <label class="wizardFieldLabel" for="inputDesc"
+                        >Descrição</label
+                      >
+                      <textarea
+                        class="wizardTextarea"
+                        id="inputDesc"
+                        placeholder="Descrição do item"
+                        aria-label="Descrição do item"
+                      ></textarea>
                     </div>
                   </div>
 
                   <div>
                     <div class="imgDiv">
                       <div class="imgDivModal">
-                        <img id="imageImg" src="" alt="Pré-visualização do item" />
+                        <img
+                          id="imageImg"
+                          src=""
+                          alt="Pré-visualização do item"
+                        />
                       </div>
-                      <input class="hidden" type="file" id="files" accept="image/*" aria-label="Selecionar imagem do item" />
-                      <label for="files" class="inputImg">Selecionar imagem</label>
+                      <input
+                        class="hidden"
+                        type="file"
+                        id="files"
+                        accept="image/*"
+                        aria-label="Selecionar imagem do item"
+                      />
+                      <label for="files" class="inputImg"
+                        >Selecionar imagem</label
+                      >
                     </div>
                   </div>
                 </div>
@@ -82,8 +137,22 @@
             </section>
 
             <footer class="wizardFooter">
-              <button class="wizardButton is-primary" id="wizardNext" type="button" aria-label="Criar item do cardápio">Criar Item</button>
-              <button class="wizardButton is-secondary" id="wizardCancel" type="button" aria-label="Cancelar criação de item">Cancelar</button>
+              <button
+                class="wizardButton is-primary"
+                id="wizardNext"
+                type="button"
+                aria-label="Criar item do cardápio"
+              >
+                Criar Item
+              </button>
+              <button
+                class="wizardButton is-secondary"
+                id="wizardCancel"
+                type="button"
+                aria-label="Cancelar criação de item"
+              >
+                Cancelar
+              </button>
             </footer>
           </div>
         </div>
@@ -91,4 +160,3 @@
     </main>
   </body>
 </html>
-

@@ -1,4 +1,11 @@
+import ApiService from "./service.js";
+import loadingProgress from "./components/loadingProgress.js";
+import snackbar from "./components/snackbar.js";
+import { getProductCategoryImage } from "./productCategories.js";
+
 (() => {
+  const api = new ApiService();
+
   const gridSection = document.querySelector(".gridSection");
   const openOrderWizard = document.querySelector("#openOrderWizard");
 
@@ -23,10 +30,6 @@
   const orderCart = document.querySelector("#orderCart");
   const orderSubtotal = document.querySelector("#orderSubtotal");
 
-  const optionsGET = {
-    method: "GET",
-  };
-
   let currentStep = 1;
   let products = [];
   let cartItems = [];
@@ -35,18 +38,18 @@
     return Number(value).toFixed(2);
   }
 
-  function categoryImage(category, nome) {
-    const normalizedName = (nome || "").trim().toLowerCase();
+  function formatLocalDateTime(dateValue) {
+    if (!dateValue) return "";
 
-    if (normalizedName === "big sb") return "../Imgs/images/items/bigSB";
-    if (normalizedName === "big sb bacon") return "../Imgs/images/items/bigSBbacon";
-    if (normalizedName === "big sb cheddar") return "../Imgs/images/items/bigSBCheddar";
-    if (normalizedName === "classic sb") return "../Imgs/images/items/cheeseClassic";
+    const date = new Date(dateValue);
+    if (Number.isNaN(date.getTime())) {
+      return String(dateValue);
+    }
 
-    if (category === "BEBIDA") return "../Imgs/images/eachCategory/bebida.jpg";
-    if (category === "ACOMPANHAMENTO") return "../Imgs/images/eachCategory/acompanhamento.jpg";
-    if (category === "COMBO") return "../Imgs/images/eachCategory/combo.jpg";
-    return "../Imgs/images/eachCategory/lanche.jpg";
+    return new Intl.DateTimeFormat("pt-BR", {
+      dateStyle: "short",
+      timeStyle: "short",
+    }).format(date);
   }
 
   function showWizardStep(step) {
@@ -110,74 +113,245 @@
     resetWizardForm();
   }
 
+  function resolveComandaId(comanda) {
+    return comanda?.comandaId ?? comanda?.id ?? comanda?.ComandaId ?? null;
+  }
+
   async function fillProductOptions() {
     if (products.length) return;
-    const response = await fetch("http://localhost:8080/api/v1/produtos", optionsGET);
-    products = await response.json();
 
-    products.forEach((product) => {
-      const option = document.createElement("option");
-      option.value = String(product.id);
-      option.textContent = `${product.nome} - R$${formatCurrency(product.preco)}`;
-      orderProduct.appendChild(option);
-    });
+    try {
+      const loadedProducts = await api.getProdutos();
+      products = Array.isArray(loadedProducts) ? loadedProducts : [];
+
+      products.forEach((product) => {
+        const option = document.createElement("option");
+        option.value = String(product.id ?? product.produtoId ?? "");
+        option.textContent = `${product.nome} - R$${formatCurrency(product.preco)}`;
+        orderProduct.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Erro ao carregar produtos:", error);
+      snackbar.error(error.message || "Não foi possível carregar os produtos.");
+      throw error;
+    }
   }
 
   async function createOrderFromWizard() {
     if (!orderPayment.value) {
-      alert("Selecione o método de pagamento.");
+      snackbar.warning("Selecione o método de pagamento.");
       return;
     }
 
     if (!cartItems.length) {
-      alert("Adicione pelo menos um item ao pedido.");
+      snackbar.warning("Adicione pelo menos um item ao pedido.");
       return;
     }
 
-    await fetch("http://localhost:8080/api/v1/comandas", {
-      method: "POST",
-    });
+    try {
+      const createdComanda = await api.createComanda();
+      let comandaId = resolveComandaId(createdComanda);
 
-    const commandasResponse = await fetch("http://localhost:8080/api/v1/comandas", optionsGET);
-    const comandas = await commandasResponse.json();
-    const lastComanda = comandas.reduce((max, current) => {
-      return current.comandaId > max.comandaId ? current : max;
-    }, comandas[0]);
+      if (!comandaId) {
+        const comandas = await api.getComandas();
+        const lastComanda = Array.isArray(comandas) ? comandas.at(-1) : null;
+        comandaId = resolveComandaId(lastComanda);
+      }
 
-    const comandaId = lastComanda?.comandaId;
-    if (!comandaId) {
-      alert("Não foi possível identificar a nova comanda criada.");
-      return;
-    }
+      if (!comandaId) {
+        snackbar.error("Não foi possível identificar a nova comanda criada.");
+        return;
+      }
 
-    for (const item of cartItems) {
-      await fetch("http://localhost:8080/api/v1/comandas/item", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      for (const item of cartItems) {
+        await api.addItemComanda({
           comandaId,
           produtoId: item.produtoId,
           observacao: "",
           quantidade: item.quantidade,
-        }),
-      });
-    }
+        });
+      }
 
-    await fetch(`http://localhost:8080/api/v1/comandas/${comandaId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        status: "PENDENTE",
+      await api.updateComanda(comandaId, {
+        status: "Pendente",
         metodoDePagamento: orderPayment.value,
-      }),
-    });
+      });
 
-    closeWizard();
-    window.loadPage("requests");
+      snackbar.success("Pedido criado com sucesso.");
+      closeWizard();
+      await window.loadPage("requests");
+    } catch (error) {
+      console.error("Erro ao criar pedido:", error);
+      snackbar.error(error.message || "Não foi possível criar o pedido.");
+    }
+  }
+
+  async function loadOrders() {
+    try {
+      const data = await api.getComandas();
+      renderOrders(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Erro ao carregar pedidos:", error);
+      snackbar.error(error.message || "Não foi possível carregar os pedidos.");
+    }
+  }
+
+  function renderOrders(orders) {
+    gridSection.innerHTML = "";
+
+    orders.forEach((order) => {
+      const card = document.createElement("article");
+      card.className = "grid orderCard";
+
+      const header = document.createElement("header");
+      header.className = "orderCardHeader";
+
+      const headerDate = document.createElement("div");
+      headerDate.className = "orderHeaderField";
+      headerDate.innerHTML = `<span class="orderHeaderLabel">Pedido Realizado</span><strong>${formatLocalDateTime(
+        order.pedidoCriadoEm,
+      )}</strong>`;
+
+      const headerTotal = document.createElement("div");
+      headerTotal.className = "orderHeaderField";
+      headerTotal.innerHTML = `<span class="orderHeaderLabel">Total</span><strong>R$${order.subtotal}</strong>`;
+
+      const headerPayment = document.createElement("div");
+      headerPayment.className = "orderHeaderField";
+      headerPayment.innerHTML = `<span class="orderHeaderLabel">Pagamento</span><strong>${order.metodoDePagamento}</strong>`;
+
+      const headerCode = document.createElement("div");
+      headerCode.className = "orderHeaderField orderHeaderFieldCode";
+      headerCode.innerHTML = `<span class="orderHeaderLabel">Pedido Nº</span><strong>${order.codigoDoPedido}</strong>`;
+
+      const expandButton = document.createElement("button");
+      expandButton.className = "orderExpandButton";
+      expandButton.type = "button";
+      expandButton.setAttribute("aria-expanded", "false");
+      expandButton.innerHTML = `
+        <span class="orderExpandLabel">Ver detalhes</span>
+        <span class="orderExpandIcon" aria-hidden="true">▾</span>
+      `;
+
+      header.appendChild(headerDate);
+      header.appendChild(headerTotal);
+      header.appendChild(headerPayment);
+      header.appendChild(headerCode);
+      header.appendChild(expandButton);
+
+      const body = document.createElement("div");
+      body.className = "orderCardBody";
+
+      const itemsPanel = document.createElement("section");
+      itemsPanel.className = "orderItemsPanel";
+
+      const itemsTitle = document.createElement("h3");
+      itemsTitle.className = "orderItemsTitle";
+      itemsTitle.textContent = "Itens do pedido";
+      itemsPanel.appendChild(itemsTitle);
+
+      const itemsScroll = document.createElement("div");
+      itemsScroll.className = "orderItemsScroll";
+
+      const orderItems = order.items ?? order.itens ?? [];
+
+      orderItems.forEach((item) => {
+        const itemRow = document.createElement("div");
+        itemRow.className = "orderItemRow";
+
+        const itemImage = document.createElement("img");
+        itemImage.className = "orderItemImage";
+        itemImage.src = getProductCategoryImage(item.categoria, item.produtoNome);
+        itemImage.alt = `Imagem do item ${item.produtoNome}`;
+
+        const itemInfo = document.createElement("div");
+        itemInfo.className = "orderItemInfo";
+        itemInfo.innerHTML = `
+          <h4>${item.produtoNome}</h4>
+          <p>Categoria: ${item.categoria}</p>
+          <p>Valor: R$${item.precoUnitario}</p>
+          <p>Quantidade: ${item.quantidade}</p>
+        `;
+
+        itemRow.appendChild(itemImage);
+        itemRow.appendChild(itemInfo);
+        itemsScroll.appendChild(itemRow);
+      });
+
+      itemsPanel.appendChild(itemsScroll);
+
+      const actionsPanel = document.createElement("aside");
+      actionsPanel.className = "orderActionsPanel";
+
+      const customer = document.createElement("p");
+      customer.className = "orderCustomer";
+      customer.textContent = "Cliente: Cliente";
+
+      const status = document.createElement("h2");
+      status.className = "preparingOrder";
+      status.textContent = "Pedido sendo preparado...";
+
+      const actions = document.createElement("div");
+      actions.className = "orderPreparingButtonsDiv";
+
+      const orderDoneButton = document.createElement("button");
+      orderDoneButton.className = "orderPreparingButtons";
+      orderDoneButton.type = "button";
+      orderDoneButton.setAttribute(
+        "aria-label",
+        "Marcar pedido como concluído",
+      );
+      orderDoneButton.innerHTML = `<img src="../Imgs/icons/checkIcon.svg" alt="Concluir pedido" />`;
+
+      const orderDeleteButton = document.createElement("button");
+      orderDeleteButton.className = "orderPreparingButtons";
+      orderDeleteButton.type = "button";
+      orderDeleteButton.setAttribute("aria-label", "Cancelar pedido");
+      orderDeleteButton.innerHTML = `<img src="../Imgs/icons/deleteIcon.svg" alt="Cancelar pedido" />`;
+
+      orderDoneButton.addEventListener("click", () => {
+        status.textContent = "Pedido concluído";
+        status.classList.add("statusDone");
+        actions.remove();
+        snackbar.success("Pedido marcado como concluído.");
+      });
+
+      orderDeleteButton.addEventListener("click", () => {
+        status.textContent = "Pedido cancelado";
+        status.classList.add("statusCanceled");
+        actions.remove();
+        snackbar.warning("Pedido cancelado.");
+      });
+
+      actions.appendChild(orderDoneButton);
+      actions.appendChild(orderDeleteButton);
+
+      actionsPanel.appendChild(customer);
+      actionsPanel.appendChild(status);
+      actionsPanel.appendChild(actions);
+
+      body.appendChild(itemsPanel);
+      body.appendChild(actionsPanel);
+
+      card.appendChild(header);
+      card.appendChild(body);
+      card.classList.add("is-collapsed");
+
+      expandButton.addEventListener("click", () => {
+        const isCollapsed = card.classList.toggle("is-collapsed");
+        const isExpanded = !isCollapsed;
+        expandButton.setAttribute("aria-expanded", String(isExpanded));
+
+        const buttonLabel = expandButton.querySelector(".orderExpandLabel");
+        if (buttonLabel) {
+          buttonLabel.textContent = isExpanded
+            ? "Ocultar detalhes"
+            : "Ver detalhes";
+        }
+      });
+
+      gridSection.appendChild(card);
+    });
   }
 
   openOrderWizard.addEventListener("click", async () => {
@@ -187,14 +361,12 @@
 
   wizardCancel.addEventListener("click", closeWizard);
 
-  // Close wizard when clicking outside (on the overlay)
   wizardSection.addEventListener("click", (e) => {
     if (e.target === wizardSection) {
       closeWizard();
     }
   });
 
-  // Also allow Escape key to close
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && wizardSection.classList.contains("is-open")) {
       closeWizard();
@@ -212,7 +384,7 @@
   wizardNext.addEventListener("click", () => {
     if (currentStep === 1) {
       if (!orderType.value) {
-        alert("Selecione o tipo de atendimento para continuar.");
+        snackbar.warning("Selecione o tipo de atendimento para continuar.");
         return;
       }
       showWizardStep(2);
@@ -239,25 +411,31 @@
     orderNumber.value = "";
   });
 
-  orderCep.addEventListener("change", () => {
+  orderCep.addEventListener("change", async () => {
     const cepValue = orderCep.value;
     if (!cepValue || orderType.value === "retirada") return;
 
-    const url = `https://opencep.com/v1/${cepValue}`;
-    const request = new XMLHttpRequest();
-    request.open("GET", url);
-    request.send();
+    const loadingToken = loadingProgress.start({
+      message: "Buscando endereço pelo CEP...",
+    });
 
-    request.onload = function () {
-      if (request.status === 200) {
-        const endereco = JSON.parse(request.response);
-        orderStreet.value = endereco.logradouro || "";
-        orderDistrict.value = endereco.bairro || "";
-      } else {
-        orderStreet.value = "CEP INVÁLIDO";
-        orderDistrict.value = "CEP INVÁLIDO";
+    try {
+      const response = await fetch(`https://opencep.com/v1/${cepValue}`);
+
+      if (!response.ok) {
+        throw new Error("CEP inválido.");
       }
-    };
+
+      const endereco = await response.json();
+      orderStreet.value = endereco.logradouro || "";
+      orderDistrict.value = endereco.bairro || "";
+    } catch {
+      orderStreet.value = "CEP INVÁLIDO";
+      orderDistrict.value = "CEP INVÁLIDO";
+      snackbar.warning("Não foi possível localizar o CEP informado.");
+    } finally {
+      loadingProgress.finish(loadingToken);
+    }
   });
 
   addOrderItem.addEventListener("click", () => {
@@ -265,16 +443,18 @@
     const quantity = Number(orderQuantity.value || 1);
 
     if (!productId) {
-      alert("Selecione um item do cardápio.");
+      snackbar.warning("Selecione um item do cardápio.");
       return;
     }
 
     if (quantity < 1) {
-      alert("A quantidade deve ser maior que zero.");
+      snackbar.warning("A quantidade deve ser maior que zero.");
       return;
     }
 
-    const selectedProduct = products.find((product) => Number(product.id) === productId);
+    const selectedProduct = products.find(
+      (product) => Number(product.id ?? product.produtoId) === productId,
+    );
     if (!selectedProduct) return;
 
     cartItems.push({
@@ -284,164 +464,12 @@
       categoria: selectedProduct.categoria,
       quantidade: quantity,
       precoUnitario: Number(selectedProduct.preco),
-      image: categoryImage(selectedProduct.categoria, selectedProduct.nome),
+      image: getProductCategoryImage(selectedProduct.categoria, selectedProduct.nome),
     });
 
     renderCart();
+    snackbar.info("Item adicionado ao pedido.");
   });
 
-  if (window.__streetbitePendingAction === "open-order-wizard") {
-    window.__streetbitePendingAction = null;
-    fillProductOptions().then(openWizard);
-  }
-
-  fetch("http://localhost:8080/api/v1/comandas", optionsGET)
-    .then((response) => response.json())
-    .then((data) => {
-      for (let index = 0; index < data.length; index++) {
-        const order = data[index];
-
-        const card = document.createElement("article");
-        card.className = "grid orderCard";
-
-        const header = document.createElement("header");
-        header.className = "orderCardHeader";
-
-        const headerDate = document.createElement("div");
-        headerDate.className = "orderHeaderField";
-        headerDate.innerHTML = `<span class="orderHeaderLabel">Pedido Realizado</span><strong>${String(order.pedidoCriadoEm || "").slice(0, 19).replace("T", " ")}</strong>`;
-
-        const headerTotal = document.createElement("div");
-        headerTotal.className = "orderHeaderField";
-        headerTotal.innerHTML = `<span class="orderHeaderLabel">Total</span><strong>R$${order.subtotal}</strong>`;
-
-        const headerPayment = document.createElement("div");
-        headerPayment.className = "orderHeaderField";
-        headerPayment.innerHTML = `<span class="orderHeaderLabel">Pagamento</span><strong>${order.metodoDePagamento}</strong>`;
-
-        const headerCode = document.createElement("div");
-        headerCode.className = "orderHeaderField orderHeaderFieldCode";
-        headerCode.innerHTML = `<span class="orderHeaderLabel">Pedido Nº</span><strong>${order.codigoDoPedido}</strong>`;
-
-        const expandButton = document.createElement("button");
-        expandButton.className = "orderExpandButton";
-        expandButton.type = "button";
-        expandButton.setAttribute("aria-expanded", "false");
-        expandButton.innerHTML = `
-          <span class="orderExpandLabel">Ver detalhes</span>
-          <span class="orderExpandIcon" aria-hidden="true">▾</span>
-        `;
-
-        header.appendChild(headerDate);
-        header.appendChild(headerTotal);
-        header.appendChild(headerPayment);
-        header.appendChild(headerCode);
-        header.appendChild(expandButton);
-
-        const body = document.createElement("div");
-        body.className = "orderCardBody";
-
-        const itemsPanel = document.createElement("section");
-        itemsPanel.className = "orderItemsPanel";
-
-        const itemsTitle = document.createElement("h3");
-        itemsTitle.className = "orderItemsTitle";
-        itemsTitle.textContent = "Itens do pedido";
-        itemsPanel.appendChild(itemsTitle);
-
-        const itemsScroll = document.createElement("div");
-        itemsScroll.className = "orderItemsScroll";
-
-        order.items.forEach((item) => {
-          const itemRow = document.createElement("div");
-          itemRow.className = "orderItemRow";
-
-          const itemImage = document.createElement("img");
-          itemImage.className = "orderItemImage";
-          itemImage.src = categoryImage(item.categoria, item.produtoNome);
-          itemImage.alt = `Imagem do item ${item.produtoNome}`;
-
-          const itemInfo = document.createElement("div");
-          itemInfo.className = "orderItemInfo";
-          itemInfo.innerHTML = `
-            <h4>${item.produtoNome}</h4>
-            <p>Categoria: ${item.categoria}</p>
-            <p>Valor: R$${item.precoUnitario}</p>
-            <p>Quantidade: ${item.quantidade}</p>
-          `;
-
-          itemRow.appendChild(itemImage);
-          itemRow.appendChild(itemInfo);
-          itemsScroll.appendChild(itemRow);
-        });
-
-        itemsPanel.appendChild(itemsScroll);
-
-        const actionsPanel = document.createElement("aside");
-        actionsPanel.className = "orderActionsPanel";
-
-        const customer = document.createElement("p");
-        customer.className = "orderCustomer";
-        customer.textContent = "Cliente: Cliente";
-
-        const status = document.createElement("h2");
-        status.className = "preparingOrder";
-        status.textContent = "Pedido sendo preparado...";
-
-        const actions = document.createElement("div");
-        actions.className = "orderPreparingButtonsDiv";
-
-        const orderDoneButton = document.createElement("button");
-        orderDoneButton.className = "orderPreparingButtons";
-        orderDoneButton.type = "button";
-        orderDoneButton.setAttribute("aria-label", "Marcar pedido como concluído");
-        orderDoneButton.innerHTML = `<img src="../Imgs/icons/checkIcon.svg" alt="Concluir pedido" />`;
-
-        const orderDeleteButton = document.createElement("button");
-        orderDeleteButton.className = "orderPreparingButtons";
-        orderDeleteButton.type = "button";
-        orderDeleteButton.setAttribute("aria-label", "Cancelar pedido");
-        orderDeleteButton.innerHTML = `<img src="../Imgs/icons/deleteIcon.svg" alt="Cancelar pedido" />`;
-
-        orderDoneButton.addEventListener("click", () => {
-          status.textContent = "Pedido concluído";
-          status.classList.add("statusDone");
-          actions.remove();
-        });
-
-        orderDeleteButton.addEventListener("click", () => {
-          status.textContent = "Pedido cancelado";
-          status.classList.add("statusCanceled");
-          actions.remove();
-        });
-
-        actions.appendChild(orderDoneButton);
-        actions.appendChild(orderDeleteButton);
-
-        actionsPanel.appendChild(customer);
-        actionsPanel.appendChild(status);
-        actionsPanel.appendChild(actions);
-
-        body.appendChild(itemsPanel);
-        body.appendChild(actionsPanel);
-
-        card.appendChild(header);
-        card.appendChild(body);
-        card.classList.add("is-collapsed");
-
-        expandButton.addEventListener("click", () => {
-          const isCollapsed = card.classList.toggle("is-collapsed");
-          const isExpanded = !isCollapsed;
-          expandButton.setAttribute("aria-expanded", String(isExpanded));
-
-          const buttonLabel = expandButton.querySelector(".orderExpandLabel");
-          if (buttonLabel) {
-            buttonLabel.textContent = isExpanded ? "Ocultar detalhes" : "Ver detalhes";
-          }
-        });
-
-        gridSection.appendChild(card);
-      }
-    });
-
+  loadOrders();
 })();

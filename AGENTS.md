@@ -4,7 +4,7 @@
 
 Food truck management platform for sales, menu, orders, and customers.
 
-- **Backend**: Spring Boot 3.4.1 / Java 21, Maven, H2 (in-memory, dev) / PostgreSQL (prod)
+- **Backend**: ASP.NET Core / .NET 10, C#, EF Core, PostgreSQL
 - **Frontend**: Vanilla HTML + CSS + JS, no build system — served via Live Server
 
 ---
@@ -13,23 +13,20 @@ Food truck management platform for sales, menu, orders, and customers.
 
 ### Backend
 
-All commands run from `Backend/sb_api/`.
+All commands run from `Api/`.
 
 ```bash
 # Run the application
-./mvnw spring-boot:run
+dotnet run --project src/StreetBite.Api/StreetBite.Api.csproj
 
-# Build (skip tests)
-./mvnw package -DskipTests
+# Build the API
+dotnet build src/StreetBite.Api/StreetBite.Api.csproj
 
-# Run all tests
-./mvnw test
-
-# Run a single test class
-./mvnw test -Dtest=StreetBiteApplicationTests
+# Run tests when test projects are present
+dotnet test
 ```
 
-The app starts on **port 8080**. H2 console is available at `http://localhost:8080/h2-console` (datasource: `jdbc:h2:mem:testdb`, user: `sa`, no password).
+The API entrypoint lives in `Api/src/StreetBite.Api/Program.cs`. Shared domain types live in `StreetBite.Core`, and EF Core persistence lives in `StreetBite.Infra`. Local development uses PostgreSQL from `Api/src/StreetBite.Api/appsettings.json`.
 
 ### Frontend
 
@@ -39,15 +36,13 @@ Open any `.html` file with Live Server (VS Code extension). The backend CORS con
 
 ## Architecture
 
-```
-Backend/sb_api/src/main/java/com/streetbite/streetbite_api/
-├── controller/     REST endpoints (@RestController, @RequestMapping("/api/v1/..."))
-├── service/        Business logic; injected into controllers via @RequiredArgsConstructor
-├── repository/     Spring Data JPA interfaces (extend JpaRepository)
-├── model/          JPA entities + DTOs
-│   ├── dto/        Request/Response DTOs used across controller↔service boundary
-│   └── enums/      ComandaStatusEnum, MetodoDePagamentoEnum, CategoriasEnum
-└── security/       WebConfig.java — CORS configuration
+```text
+Api/src/
+├── StreetBite.Api/         HTTP entrypoint, endpoint mappings, API responses, and configuration
+│   ├── Application/        Minimal API route groups and shared web setup
+│   └── Views/              API response/view models
+├── StreetBite.Core/        Domain entities, enums, and shared result models
+└── StreetBite.Infra/       EF Core DbContext and entity configurations
 
 FrontEnd/
 ├── landPage.html           Entry page
@@ -58,18 +53,18 @@ FrontEnd/
 
 ### Core Domain Model
 
-- **Comanda** (order): has many `Item`s, optionally linked to a `Cliente`. Carries `status`, `metodoDePagamento`, auto-generated 4-char alphanumeric `codigoDoPedido`, and computed `subtotal`.
-- **Item**: join between `Comanda` and `Produto`. `precoUnitario` is automatically set from `Produto.preco` when `setProduto()` is called. `getTotalItem()` = `precoUnitario × quantidade`.
-- **Produto**: menu item with `nome`, `preco`, `categoria` (enum).
-- **Cliente**: customer with `nome`, `telefone`, and a list of `Endereco`.
+- **Comanda** (order): has many `Item`s, optionally linked to a `Cliente`. Carries `Status`, `MetodoDePagamento`, auto-generated `CodigoPedido`, and computed `Subtotal`.
+- **Item**: join between `Comanda` and `Produto`. `PrecoUnitario` is automatically set from `Produto.Preco` when `Produto` is assigned. `GetTotalItem()` = `PrecoUnitario × Quantidade`.
+- **Produto**: menu item with `Nome`, `Preco`, and `Categoria` (enum).
+- **Cliente**: customer with `Nome`, `Email`/`Telefone`, and a list of `Endereco`.
 
 ### Request/Response Flow
 
-Controllers accept DTOs (not entities), delegate to Services, which call Repositories. `Produto` endpoints are an exception — they use the entity directly in controller + service.
+Minimal API route groups live under `StreetBite.Api/Application/*` and are wired from `Program.cs`. Shared response models live under `StreetBite.Api/Views/Responses`, and domain operations return `Result` / `Result<T>` from `StreetBite.Core/Models` where appropriate.
 
-### Bidirectional JPA Relationships
+### Entity Framework Core Relationships
 
-All bidirectional `@OneToMany`/`@ManyToOne` pairs use `@JsonManagedReference` on the parent side and `@JsonBackReference` on the child side to prevent infinite JSON serialization loops.
+EF Core mappings live under `StreetBite.Infra/Data/Configurations` and are applied from `StreetBiteDbContext`. Keep relationship and table configuration in those classes instead of scattering mapping rules across the application.
 
 ---
 
@@ -83,13 +78,13 @@ All entity names, field names, enum values, service methods, and endpoint paths 
 
 ### Enums
 
-- `ComandaStatusEnum`: `PENDENTE`, `EM_PRODUCAO`, `FINALIZADO`
-- `MetodoDePagamentoEnum`: `CRÉDITO`, `DÉBITO`, `DINHEIRO`, `PIX`
-- `CategoriasEnum`: `ACOMPANHAMENTO`, `BEBIDA`, `COMBO`, `LANCHE`
+- `EComandaStatus`: `Pendente`, `EmProducao`, `Finalizado`
+- `EMetodoPagamento`: `Credito`, `Debito`, `Dinheiro`, `Pix`
+- `ECategorias`: `Acompanhamento`, `Bebida`, `Combo`, `Lanche`
 
-### Lombok Usage
+### C# / .NET Conventions
 
-Entities use `@Data` + `@NoArgsConstructor`. Services/controllers use `@RequiredArgsConstructor` for constructor injection (no `@Autowired`).
+Use nullable reference types and implicit usings as configured in the project files. Prefer constructor injection, `sealed` entities where the codebase already does, and extension methods for service registration / pipeline setup (`AddApiServices`, `UseApiConfiguration`, `Map*Endpoints`).
 
 ### Frontend API Access
 
@@ -97,10 +92,10 @@ Entities use `@Data` + `@NoArgsConstructor`. Services/controllers use `@Required
 
 ```js
 import ApiService from "./service.js";
-const api = new ApiService("http://localhost:8080");
+const api = new ApiService("http://localhost:5109");
 ```
 
-Older/simpler pages call `fetch('http://localhost:8080/api/v1/...')` directly. Prefer `ApiService` for new pages.
+Older/simpler pages call `fetch('http://localhost:5109/api/v1/...')` directly. Prefer `ApiService` for new pages.
 
 ### CEP / Address Lookup
 
@@ -108,4 +103,4 @@ Older/simpler pages call `fetch('http://localhost:8080/api/v1/...')` directly. P
 
 ### Category Images
 
-Frontend maps `CategoriasEnum` values to static images in `FrontEnd/Imgs/images/eachCategory/` (`bebida.jpg`, `lanche.jpg`, `combo.jpg`, `acompanhamento.jpg`).
+Frontend maps `ECategorias` values to static images in `FrontEnd/Imgs/images/eachCategory/` (`bebida.jpg`, `lanche.jpg`, `combo.jpg`, `acompanhamento.jpg`).

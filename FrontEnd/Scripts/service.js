@@ -1,122 +1,245 @@
+import loadingProgress from './components/loadingProgress.js';
+
+const DEFAULT_BASE_URL = 'http://localhost:5109';
+
 class ApiService {
-    constructor(baseUrl) {
-        this.baseUrl = baseUrl;
+  constructor(baseUrl = DEFAULT_BASE_URL) {
+    this.baseUrl = baseUrl.replace(/\/$/, '');
+  }
+
+  buildUrl(endpoint) {
+    const normalizedEndpoint = endpoint.startsWith('/')
+      ? endpoint
+      : `/${endpoint}`;
+    return `${this.baseUrl}${normalizedEndpoint}`;
+  }
+
+  async readPayload(response) {
+    const text = await response.text();
+
+    if (!text) {
+      return null;
     }
 
-    async request(endpoint, method = 'GET', body = null) {
-        const headers = {
-            'Content-Type': 'application/json'
-        };
+    try {
+      return JSON.parse(text);
+    } catch {
+      return text;
+    }
+  }
 
-        const options = {
-            method,
-            headers,
-        };
-
-        if (body) {
-            options.body = JSON.stringify(body);
-        }
-
-        try {
-            const response = await fetch(`${this.baseUrl}${endpoint}`, options);
-            if (!response.ok) {
-                throw new Error(`Erro: ${response.status} - ${response.statusText}`);
-            }
-            return await response.json();
-        } catch (error) {
-            console.error('Erro na requisição:', error);
-            throw error;
-        }
+  unwrapResponse(payload) {
+    if (
+      payload == null ||
+      Array.isArray(payload) ||
+      typeof payload !== 'object'
+    ) {
+      return payload;
     }
 
-    // Métodos específicos para cada entidade
-    async getClientes() {
-        return this.request('/api/v1/clientes');
+    if (Object.prototype.hasOwnProperty.call(payload, 'data')) {
+      return payload.data;
     }
 
-    async getClienteById(id) {
-        return this.request(`/api/v1/clientes/${id}`);
+    if (Object.prototype.hasOwnProperty.call(payload, 'Data')) {
+      return payload.Data;
     }
 
-    async createCliente(data) {
-        return this.request('/api/v1/clientes', 'POST', data);
+    return payload;
+  }
+
+  getErrorMessage(payload, fallbackMessage) {
+    if (payload == null) {
+      return fallbackMessage;
     }
 
-    async updateCliente(id, data) {
-        return this.request(`/api/v1/clientes/${id}`, 'PATCH', data);
+    if (typeof payload === 'string') {
+      return payload;
     }
 
-    async deleteCliente(id) {
-        return this.request(`/api/v1/clientes/${id}`, 'DELETE');
+    const message = payload.message ?? payload.Message;
+    if (typeof message === 'string' && message.trim()) {
+      return message;
     }
 
-    async getComandas() {
-        return this.request('/api/v1/comandas');
+    const errors = payload.errors ?? payload.Errors;
+    if (Array.isArray(errors) && errors.length) {
+      return errors.filter(Boolean).join(' | ');
     }
 
-    async getComandaById(id) {
-        return this.request(`/api/v1/comandas/${id}`);
+    return fallbackMessage;
+  }
+
+  hasWrappedError(payload) {
+    if (
+      payload == null ||
+      Array.isArray(payload) ||
+      typeof payload !== 'object'
+    ) {
+      return false;
     }
 
-    async createComanda() {
-        return this.request('/api/v1/comandas', 'POST');
+    const message = payload.message ?? payload.Message;
+    const hasData =
+      Object.prototype.hasOwnProperty.call(payload, 'data') ||
+      Object.prototype.hasOwnProperty.call(payload, 'Data');
+    const success = payload.success ?? payload.Success;
+
+    return (
+      (typeof message === 'string' && message.trim() && !hasData) ||
+      success === false
+    );
+  }
+
+  async request(endpoint, method = 'GET', body = null) {
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    const options = {
+      method,
+      headers,
+    };
+
+    if (body != null) {
+      options.body = JSON.stringify(body);
     }
 
-    async updateComanda(id, data) {
-        return this.request(`/api/v1/comandas/${id}`, 'PATCH', data);
+    const loadingToken = loadingProgress.start({
+      message: this.getProgressMessage(method),
+    });
+
+    try {
+      const url = this.buildUrl(endpoint);
+      console.log(
+        `Requisição: ${method.toUpperCase()} ${url}`,
+        body ? { payload: body } : {},
+      );
+
+      const response = await fetch(url, options);
+      const payload = await this.readPayload(response);
+
+      if (!response.ok || this.hasWrappedError(payload)) {
+        throw new Error(
+          this.getErrorMessage(
+            payload,
+            `Erro: ${response.status} - ${response.statusText}`,
+          ),
+        );
+      }
+
+      return this.unwrapResponse(payload);
+    } finally {
+      loadingProgress.finish(loadingToken);
+    }
+  }
+
+  getProgressMessage(method) {
+    const normalizedMethod = String(method ?? 'GET').toUpperCase();
+
+    if (normalizedMethod === 'POST') {
+      return 'Enviando dados...';
     }
 
-    async deleteComanda(id) {
-        return this.request(`/api/v1/comandas/${id}`, 'DELETE');
+    if (normalizedMethod === 'PATCH' || normalizedMethod === 'PUT') {
+      return 'Atualizando dados...';
     }
 
-    async addItemComanda(data) {
-        return this.request(`/api/v1/comandas/itens`, 'POST', data);
+    if (normalizedMethod === 'DELETE') {
+      return 'Removendo dados...';
     }
 
-    async getEnderecos() {
-        return this.request('/api/v1/enderecos');
-    }
+    return 'Carregando dados...';
+  }
 
-    async getEnderecoById(id) {
-        return this.request(`/api/v1/enderecos/${id}`);
-    }
+  // Métodos específicos para cada entidade
+  async getClientes() {
+    return this.request('/api/v1/clientes');
+  }
 
-    async createEndereco(data) {
-        return this.request('/api/v1/enderecos', 'POST', data);
-    }
+  async getClienteById(id) {
+    return this.request(`/api/v1/clientes/${id}`);
+  }
 
-    async updateEndereco(id, data) {
-        return this.request(`/api/v1/enderecos/${id}`, 'PATCH', data);
-    }
+  async createCliente(data) {
+    return this.request('/api/v1/clientes', 'POST', data);
+  }
 
-    async deleteEndereco(id) {
-        return this.request(`/api/v1/enderecos/${id}`, 'DELETE');
-    }
+  async updateCliente(id, data) {
+    return this.request(`/api/v1/clientes/${id}`, 'PATCH', data);
+  }
 
-    async getProdutos() {
-        return this.request('/api/v1/produtos');
-    }
+  async deleteCliente(id) {
+    return this.request(`/api/v1/clientes/${id}`, 'DELETE');
+  }
 
-    async getProdutoById(id) {
-        return this.request(`/api/v1/produtos/${id}`);
-    }
+  async getComandas() {
+    return this.request('/api/v1/comandas');
+  }
 
-    async createProduto(data) {
-        return this.request('/api/v1/produtos', 'POST', data);
-    }
+  async getComandaById(id) {
+    return this.request(`/api/v1/comandas/${id}`);
+  }
 
-    async updateProduto(id, data) {
-        return this.request(`/api/v1/produtos/${id}`, 'PATCH', data);
-    }
+  async createComanda() {
+    return this.request('/api/v1/comandas', 'POST');
+  }
 
-    async deleteProduto(id) {
-        return this.request(`/api/v1/produtos/${id}`, 'DELETE');
-    }
+  async updateComanda(id, data) {
+    return this.request(`/api/v1/comandas/${id}`, 'PATCH', data);
+  }
+
+  async deleteComanda(id) {
+    return this.request(`/api/v1/comandas/${id}`, 'DELETE');
+  }
+
+  async addItemComanda(data) {
+    return this.request('/api/v1/comandas/item', 'POST', data);
+  }
+
+  async getEnderecos() {
+    return this.request('/api/v1/enderecos');
+  }
+
+  async getEnderecoById(id) {
+    return this.request(`/api/v1/enderecos/${id}`);
+  }
+
+  async createEndereco(data) {
+    return this.request('/api/v1/enderecos', 'POST', data);
+  }
+
+  async updateEndereco(id, data) {
+    return this.request(`/api/v1/enderecos/${id}`, 'PATCH', data);
+  }
+
+  async deleteEndereco(id) {
+    return this.request(`/api/v1/enderecos/${id}`, 'DELETE');
+  }
+
+  async getProdutos() {
+    return this.request('/api/v1/produtos');
+  }
+
+  async getProdutoById(id) {
+    return this.request(`/api/v1/produtos/${id}`);
+  }
+
+  async createProduto(data) {
+    return this.request('/api/v1/produtos', 'POST', { data });
+  }
+
+  async updateProduto(id, data) {
+    return this.request(`/api/v1/produtos/${id}`, 'PATCH', { data });
+  }
+
+  async deleteProduto(id) {
+    return this.request(`/api/v1/produtos/${id}`, 'DELETE');
+  }
 }
 
 // Exemplo de uso:
-// const api = new ApiService('http://localhost:8080');
+// const api = new ApiService("http://localhost:5109");
 // api.getClientes().then(clientes => console.log(clientes));
 
 export default ApiService;

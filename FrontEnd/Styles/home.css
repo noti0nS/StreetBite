@@ -1,33 +1,33 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:wght@100..900&display=swap");
 
 :root {
-  --primary: #E63946;
-  --secondary: #1D3557;
-  --background: #F8F9FA;
-  --card: #FFFFFF;
+  --primary: #e63946;
+  --secondary: #1d3557;
+  --background: #f8f9fa;
+  --card: #ffffff;
   --text: #212529;
-  --text-light: #6C757D;
-  --secondary-soft: #E9EEF5;
-  --primary-soft: #FDECEE;
-  --border: #DCE3EA;
-  --danger: #C1121F;
-  --success: #2A9D8F;
-  --button-color: #AF303B;
+  --text-light: #6c757d;
+  --secondary-soft: #e9eef5;
+  --primary-soft: #fdecee;
+  --border: #dce3ea;
+  --danger: #c1121f;
+  --success: #2a9d8f;
+  --button-color: #af303b;
 }
 
 :root[data-theme="dark"] {
-  --primary: #E63946;
-  --secondary: #8FB3D9;
-  --background: #10151C;
-  --card: #1A222D;
-  --text: #E9ECEF;
-  --text-light: #AEB8C2;
+  --primary: #e63946;
+  --secondary: #8fb3d9;
+  --background: #10151c;
+  --card: #1a222d;
+  --text: #e9ecef;
+  --text-light: #aeb8c2;
   --secondary-soft: #263243;
-  --primary-soft: #3A2327;
+  --primary-soft: #3a2327;
   --border: #314152;
-  --danger: #FF5D6A;
-  --success: #4CC9A6;
-  --button-color: #EE646E;
+  --danger: #ff5d6a;
+  --success: #4cc9a6;
+  --button-color: #ee646e;
 }
 
 * {
@@ -175,7 +175,9 @@ h6 {
   grid-template-columns: minmax(220px, 260px) minmax(280px, 540px);
   opacity: 0;
   transform: translateX(24px) scale(0.985);
-  transition: opacity 0.42s ease, transform 0.42s ease;
+  transition:
+    opacity 0.42s ease,
+    transform 0.42s ease;
   pointer-events: none;
 }
 
@@ -198,8 +200,6 @@ h6 {
   display: flex;
   flex-direction: column;
   gap: 12px;
- 
-  
 }
 
 .slideInfo h3 {
@@ -227,7 +227,10 @@ h6 {
   font-size: 35px;
   line-height: 1;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .carouselControl:hover {
@@ -249,7 +252,9 @@ h6 {
   border: 1px solid var(--card);
   background: transparent;
   cursor: pointer;
-  transition: background-color 0.25s ease, transform 0.2s ease;
+  transition:
+    background-color 0.25s ease,
+    transform 0.2s ease;
 }
 
 .carouselDot.active {
@@ -270,7 +275,7 @@ h6 {
   .grid img {
     width: 120px;
     height: 100px;
-  } 
+  }
   .contentArea {
     margin-bottom: 100px;
   }
@@ -305,11 +310,9 @@ h6 {
   .slideInfo p {
     font-size: 16px;
   }
- 
 }
 
 body {
   background-color: var(--background);
   color: var(--text);
 }
-
