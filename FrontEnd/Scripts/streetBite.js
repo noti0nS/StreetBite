@@ -10,6 +10,11 @@ const themeToggleSidebarButton = document.querySelector(
   "#themeToggleSidebarButton",
 );
 const themeToggleIcon = document.querySelector("#themeToggleIcon");
+const mobileActionButton = document.querySelector("#mobileActionButton");
+const mobileQuickActions = document.querySelector("#mobileQuickActions");
+const quickCreateItemButton = document.querySelector("#quickCreateItem");
+const quickCreateOrderButton = document.querySelector("#quickCreateOrder");
+const floatingActionButtons = document.querySelector("#floatingActionButtons");
 
 const THEME_STORAGE_KEY = "streetbite-theme";
 
@@ -48,6 +53,17 @@ function updateThemeControls(theme) {
   const themeLabel = document.querySelector("#themeLabel");
   if (themeLabel) {
     themeLabel.textContent = `Tema atual: ${isDark ? "Escuro" : "Claro"}`;
+  }
+}
+
+function syncAccessibilityButtonIntoStack() {
+  if (!floatingActionButtons) return;
+
+  const accessibilityButton = document.querySelector(".asw-menu-btn");
+  if (!accessibilityButton) return;
+
+  if (accessibilityButton.parentElement !== floatingActionButtons) {
+    floatingActionButtons.appendChild(accessibilityButton);
   }
 }
 
@@ -102,6 +118,39 @@ const pageToSidebarButton = {
 
 let currentPageScript = null;
 
+function isMobileViewport() {
+  return window.matchMedia("(max-width: 768px)").matches;
+}
+
+function closeMobileQuickActions() {
+  if (!mobileQuickActions || !mobileActionButton) return;
+  mobileQuickActions.classList.remove("is-open");
+  mobileQuickActions.setAttribute("aria-hidden", "true");
+  mobileActionButton.setAttribute("aria-expanded", "false");
+}
+
+function toggleMobileQuickActions() {
+  if (!mobileQuickActions || !mobileActionButton) return;
+  const willOpen = !mobileQuickActions.classList.contains("is-open");
+  mobileQuickActions.classList.toggle("is-open", willOpen);
+  mobileQuickActions.setAttribute("aria-hidden", String(!willOpen));
+  mobileActionButton.setAttribute("aria-expanded", String(willOpen));
+}
+
+async function triggerMobileQuickAction(actionType) {
+  if (actionType === "create-item") {
+    window.__streetbitePendingAction = "open-item-wizard";
+    await loadPage("menu");
+  }
+
+  if (actionType === "create-order") {
+    window.__streetbitePendingAction = "open-order-wizard";
+    await loadPage("requests");
+  }
+
+  closeMobileQuickActions();
+}
+
 function updateSidebarActive(pageKey) {
   const buttons = [homeButton, menuButton, ordersButton, settingsButton];
   buttons.forEach((button) => button?.classList.remove("is-active"));
@@ -151,6 +200,10 @@ async function loadPage(pageKey) {
     }
   } finally {
     loadingProgress.finish(loadingToken);
+  }
+
+  if (isMobileViewport()) {
+    closeMobileQuickActions();
   }
 }
 
@@ -209,9 +262,59 @@ settingsButton.addEventListener("click", (e) => {
   loadPage("settings");
 });
 
+if (mobileActionButton) {
+  mobileActionButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    toggleMobileQuickActions();
+  });
+}
+
+if (quickCreateItemButton) {
+  quickCreateItemButton.addEventListener("click", async () => {
+    await triggerMobileQuickAction("create-item");
+  });
+}
+
+if (quickCreateOrderButton) {
+  quickCreateOrderButton.addEventListener("click", async () => {
+    await triggerMobileQuickAction("create-order");
+  });
+}
+
+document.addEventListener("click", (event) => {
+  if (!isMobileViewport()) return;
+  if (!mobileQuickActions || !mobileActionButton) return;
+
+  const clickedInsideQuickActions = mobileQuickActions.contains(event.target);
+  const clickedActionButton = mobileActionButton.contains(event.target);
+
+  if (!clickedInsideQuickActions && !clickedActionButton) {
+    closeMobileQuickActions();
+  }
+});
+
+window.addEventListener("resize", () => {
+  if (!isMobileViewport()) {
+    closeMobileQuickActions();
+  }
+});
+
 if (themeToggleSidebarButton) {
   themeToggleSidebarButton.addEventListener("click", () => {
     toggleTheme();
+  });
+}
+
+if (floatingActionButtons) {
+  syncAccessibilityButtonIntoStack();
+
+  const accessibilityObserver = new MutationObserver(() => {
+    syncAccessibilityButtonIntoStack();
+  });
+
+  accessibilityObserver.observe(document.body, {
+    childList: true,
+    subtree: true,
   });
 }
 

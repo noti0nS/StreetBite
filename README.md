@@ -1,8 +1,12 @@
 # StreetBite
 
-<img width="809" height="556" alt="image" src="https://github.com/user-attachments/assets/d9c34a62-2fa2-4ed5-8693-92da47d1b335" />
+<img width="1918" height="908" alt="image" src="https://github.com/user-attachments/assets/181febdc-3477-4a55-95f8-1da34b79b10d" />
 
-<img width="809" height="556" alt="image" src="https://github.com/user-attachments/assets/7702b872-32b5-4bce-a2e5-6c739d1d864b" />
+
+
+<img width="1919" height="902" alt="image" src="https://github.com/user-attachments/assets/39529833-9d36-4acd-8bc7-126b629e4d80" />
+
+
 
 `CESMAC AL` `SISTEMAS DE INFORMAÇÃO`
 
@@ -15,8 +19,7 @@
 - Julia Cavalcante
 
 ## OBJETIVO:
-
-Facilitar a gestão de Food Trucks, oferecendo uma plataforma simples e eficiente para o controle de vendas, cardápio, pedidos e clientes. Ajudando a otimizar operações e melhorar a experiência do cliente.
+O StreetBite é uma plataforma web de gestão simplificada projetada exclusivamente para o ecossistema de Food Trucks. A aplicação visa profissionalizar operações móveis através de uma interface enxuta, integrando vendas, cardápio e clientes em um único ambiente digital de baixo custo
 
 ## JUSTIFICATIVA:
 
@@ -29,7 +32,5 @@ Entre no "StreetBiteApplication.java" e clique em Run (Rodar) no canto superior 
 
 ![comousar](https://github.com/user-attachments/assets/1ba9cc6c-62fc-4fe9-80da-0649265aa109)
 
-## DOCUMENTAÇÃO:
-
-- [Documentação de Contexto](https://drive.google.com/file/d/1i7cvJ9N9pWvz6rzsD6tSsUfalnOabutx/view?usp=drive_link)
+## FIGMA:
 - [Design da Aplicação](https://www.figma.com/design/uAC8odd4ScmFf9QTPhL8t1/StreetBite?node-id=0-1&p=f&t=Hr3nVETTd1u2AIGM-0)
