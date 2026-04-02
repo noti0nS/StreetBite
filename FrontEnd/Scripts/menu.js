@@ -178,6 +178,7 @@ import {
       nome,
       preco: Number(preco),
       categoria: serializeProductCategory(categoria),
+      descricao: inputDesc.value.trim() || null,
     };
 
     try {

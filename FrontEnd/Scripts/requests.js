@@ -38,6 +38,20 @@ import { getProductCategoryImage } from "./productCategories.js";
     return Number(value).toFixed(2);
   }
 
+  function formatLocalDateTime(dateValue) {
+    if (!dateValue) return "";
+
+    const date = new Date(dateValue);
+    if (Number.isNaN(date.getTime())) {
+      return String(dateValue);
+    }
+
+    return new Intl.DateTimeFormat("pt-BR", {
+      dateStyle: "short",
+      timeStyle: "short",
+    }).format(date);
+  }
+
   function showWizardStep(step) {
     currentStep = step;
     wizardStepLocal.classList.toggle("hidden", step !== 1);
@@ -194,11 +208,9 @@ import { getProductCategoryImage } from "./productCategories.js";
 
       const headerDate = document.createElement("div");
       headerDate.className = "orderHeaderField";
-      headerDate.innerHTML = `<span class="orderHeaderLabel">Pedido Realizado</span><strong>${String(
-        order.pedidoCriadoEm || "",
-      )
-        .slice(0, 19)
-        .replace("T", " ")}</strong>`;
+      headerDate.innerHTML = `<span class="orderHeaderLabel">Pedido Realizado</span><strong>${formatLocalDateTime(
+        order.pedidoCriadoEm,
+      )}</strong>`;
 
       const headerTotal = document.createElement("div");
       headerTotal.className = "orderHeaderField";

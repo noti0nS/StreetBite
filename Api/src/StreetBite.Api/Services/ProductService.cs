@@ -17,13 +17,14 @@ public sealed class ProductService(StreetBiteDbContext dbContext) : IProductServ
         {
             Nome = request.Data!.Nome.Trim(),
             Preco = request.Data.Preco,
-            Categoria = request.Data.Categoria
+            Categoria = request.Data.Categoria,
+            Descricao = request.Data.Descricao?.Trim()
         };
 
         dbContext.Produtos.Add(produto);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var addedProduct = new ProductViewDTO(produto.Id, produto.Nome, produto.Preco, produto.Categoria);
+        var addedProduct = new ProductViewDTO(produto.Id, produto.Nome, produto.Preco, produto.Categoria, produto.Descricao);
         return Result<ProductViewDTO>.Ok(addedProduct);
     }
 
@@ -43,10 +44,10 @@ public sealed class ProductService(StreetBiteDbContext dbContext) : IProductServ
 
         var products = await dbContext.Produtos
             .AsNoTracking()
-            .OrderBy(x => x.Nome)
+            .OrderBy(x => x.Id)
             .Skip((currentPage - 1) * pageSize)
             .Take(pageSize)
-            .Select(x => new ProductViewDTO(x.Id, x.Nome, x.Preco, x.Categoria))
+            .Select(x => new ProductViewDTO(x.Id, x.Nome, x.Preco, x.Categoria, x.Descricao))
             .ToListAsync(cancellationToken);
 
         var pagedResponse = new PagedApiResponse<List<ProductViewDTO>>(
@@ -63,7 +64,7 @@ public sealed class ProductService(StreetBiteDbContext dbContext) : IProductServ
     {
         var product = await dbContext.Produtos
             .AsNoTracking()
-            .Select(x => new ProductViewDTO(x.Id, x.Nome, x.Preco, x.Categoria))
+            .Select(x => new ProductViewDTO(x.Id, x.Nome, x.Preco, x.Categoria, x.Descricao))
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
         if (product is null)
@@ -83,11 +84,12 @@ public sealed class ProductService(StreetBiteDbContext dbContext) : IProductServ
         product.Nome = request.Data!.Nome.Trim();
         product.Preco = request.Data!.Preco;
         product.Categoria = request.Data!.Categoria;
+        product.Descricao = request.Data.Descricao?.Trim();
         product.ModifiedAt = DateTime.UtcNow;
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        var updatedProduct = new ProductViewDTO(product.Id, product.Nome, product.Preco, product.Categoria);
+        var updatedProduct = new ProductViewDTO(product.Id, product.Nome, product.Preco, product.Categoria, product.Descricao);
         return Result<ProductViewDTO>.Ok(updatedProduct);
     }
 

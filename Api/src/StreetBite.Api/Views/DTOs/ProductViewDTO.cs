@@ -7,5 +7,6 @@ public record ProductViewDTO
     int Id,
     string Nome,
     decimal Preco,
-    ECategorias Categoria
+    ECategorias Categoria,
+    string? Descricao
 );
