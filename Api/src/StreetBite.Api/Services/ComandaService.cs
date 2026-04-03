@@ -104,6 +104,26 @@ public sealed class ComandaService(
         return await GetComandaByIdAsync(comanda.Id, cancellationToken);
     }
 
+    public async Task<Result> ConfirmComandaAsync(
+        long id,
+        CancellationToken cancellationToken = default)
+    {
+        // This executes a single UPDATE query directly in the DB
+        int rowsAffected = await dbContext.Comandas
+            .Where(x => x.Id == id)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(c => c.Status, EComandaStatus.Finalizado)
+                .SetProperty(c => c.ModifiedAt, DateTime.UtcNow),
+                cancellationToken);
+
+        if (rowsAffected == 0)
+        {
+            return Result.Fail("Comanda não encontrada.", HttpStatusCode.NotFound);
+        }
+
+        return Result.Ok();
+    }
+
     public async Task<Result> DeleteComandaAsync(long id, CancellationToken cancellationToken = default)
     {
         if (!await dbContext.Comandas.AnyAsync(x => x.Id == id, cancellationToken))
