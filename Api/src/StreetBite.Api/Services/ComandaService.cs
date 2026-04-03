@@ -83,20 +83,8 @@ public sealed class ComandaService(
             return Result<ComandaViewDTO>.Fail("Comanda não encontrada.", HttpStatusCode.NotFound);
         }
 
-        if (!Enum.TryParse(request.Status, true, out EComandaStatus status) ||
-            !Enum.IsDefined(status))
-        {
-            return Result<ComandaViewDTO>.Fail("Status da comanda inválido.", HttpStatusCode.BadRequest);
-        }
-
-        if (!Enum.TryParse(request.MetodoDePagamento, true, out EMetodoPagamento metodoDePagamento) ||
-            !Enum.IsDefined(metodoDePagamento))
-        {
-            return Result<ComandaViewDTO>.Fail("Método de pagamento inválido.", HttpStatusCode.BadRequest);
-        }
-
-        comanda.Status = status;
-        comanda.MetodoDePagamento = metodoDePagamento;
+        comanda.Status = request.Status;
+        comanda.MetodoDePagamento = request.MetodoDePagamento;
         comanda.ModifiedAt = DateTime.UtcNow;
 
         await dbContext.SaveChangesAsync(cancellationToken);
@@ -264,9 +252,9 @@ public sealed class ComandaService(
             items,
             comanda.CodigoPedido,
             comanda.Subtotal,
-            comanda.Status.ToString(),
+            comanda.Status,
             comanda.CreatedAt,
-            comanda.MetodoDePagamento.ToString());
+            comanda.MetodoDePagamento);
     }
 
     private static ItemViewDTO MapItem(Item item)
@@ -274,7 +262,7 @@ public sealed class ComandaService(
         return new ItemViewDTO(
             item.Id,
             item.Produto!.Nome,
-            item.Produto.Categoria.ToString(),
+            item.Produto.Categoria,
             item.Quantidade,
             item.PrecoUnitario);
     }

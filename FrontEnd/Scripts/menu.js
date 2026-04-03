@@ -33,7 +33,7 @@ import {
 
   function resetWizardForm() {
     inputName.value = "";
-    selectCategory.value = "Lanche";
+    selectCategory.value = "3";
     inputPrice.value = "";
     inputDesc.value = "";
     imageImg.src = "";
@@ -47,7 +47,9 @@ import {
       wizardTitle.textContent = "Assistente de Edição de Item";
       wizardSubtitle.textContent = "Atualize os dados do item selecionado.";
       inputName.value = produto.nome ?? "";
-      selectCategory.value = normalizeProductCategory(produto.categoria) || "Lanche";
+      selectCategory.value = String(
+        serializeProductCategory(produto.categoria) ?? 3,
+      );
       inputPrice.value = produto.preco ?? "";
       inputDesc.value = produto.descricao ?? "";
       wizardNext.textContent = "Salvar Edição";

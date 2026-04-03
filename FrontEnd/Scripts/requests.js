@@ -1,7 +1,15 @@
 import ApiService from "./service.js";
 import loadingProgress from "./components/loadingProgress.js";
 import snackbar from "./components/snackbar.js";
-import { getProductCategoryImage } from "./productCategories.js";
+import {
+  getProductCategoryImage,
+  normalizeProductCategory,
+} from "./productCategories.js";
+import {
+  getEnumByValue,
+  ORDER_STATUS_OPTIONS,
+  PAYMENT_METHOD_OPTIONS,
+} from "./enumMappings.js";
 
 (() => {
   const api = new ApiService();
@@ -119,31 +127,11 @@ import { getProductCategoryImage } from "./productCategories.js";
   }
 
   function resolveOrderStatus(order) {
-    return String(order?.status ?? order?.Status ?? "").toLowerCase();
+    return getEnumByValue(ORDER_STATUS_OPTIONS, order?.status ?? order?.Status);
   }
 
   function getOrderStatusPresentation(status) {
-    if (status === "finalizado") {
-      return {
-        label: "Pedido concluído",
-        className: "statusDone",
-        showActions: false,
-      };
-    }
-
-    if (status === "emproducao" || status === "em_producao") {
-      return {
-        label: "Pedido em produção",
-        className: "",
-        showActions: true,
-      };
-    }
-
-    return {
-      label: "Pedido sendo preparado...",
-      className: "",
-      showActions: true,
-    };
+    return status ?? ORDER_STATUS_OPTIONS[0];
   }
 
   async function fillProductOptions() {
@@ -202,8 +190,8 @@ import { getProductCategoryImage } from "./productCategories.js";
       }
 
       await api.updateComanda(comandaId, {
-        status: "Pendente",
-        metodoDePagamento: orderPayment.value,
+        status: ORDER_STATUS_OPTIONS[0].value,
+        metodoDePagamento: Number(orderPayment.value),
       });
 
       snackbar.success("Pedido criado com sucesso.");
@@ -251,7 +239,12 @@ import { getProductCategoryImage } from "./productCategories.js";
 
       const headerPayment = document.createElement("div");
       headerPayment.className = "orderHeaderField";
-      headerPayment.innerHTML = `<span class="orderHeaderLabel">Pagamento</span><strong>${order.metodoDePagamento}</strong>`;
+      headerPayment.innerHTML = `<span class="orderHeaderLabel">Pagamento</span><strong>${
+        getEnumByValue(
+          PAYMENT_METHOD_OPTIONS,
+          order.metodoDePagamento,
+        )?.getDescription() ?? ""
+      }</strong>`;
 
       const headerCode = document.createElement("div");
       headerCode.className = "orderHeaderField orderHeaderFieldCode";
@@ -304,7 +297,7 @@ import { getProductCategoryImage } from "./productCategories.js";
         itemInfo.className = "orderItemInfo";
         itemInfo.innerHTML = `
           <h4>${item.produtoNome}</h4>
-          <p>Categoria: ${item.categoria}</p>
+          <p>Categoria: ${normalizeProductCategory(item.categoria)}</p>
           <p>Valor: R$${item.precoUnitario}</p>
           <p>Quantidade: ${item.quantidade}</p>
         `;
@@ -325,7 +318,7 @@ import { getProductCategoryImage } from "./productCategories.js";
 
       const status = document.createElement("h2");
       status.className = "preparingOrder";
-      status.textContent = statusInfo.label;
+      status.textContent = statusInfo.getDescription();
       if (statusInfo.className) {
         status.classList.add(statusInfo.className);
       }
@@ -363,8 +356,8 @@ import { getProductCategoryImage } from "./productCategories.js";
 
           try {
             await api.confirmComanda(orderId);
-            order.status = "Finalizado";
-            order.Status = "Finalizado";
+            order.status = ORDER_STATUS_OPTIONS[2].value;
+            order.Status = ORDER_STATUS_OPTIONS[2].value;
             renderOrders();
             snackbar.success("Pedido marcado como concluído.");
           } catch (error) {
