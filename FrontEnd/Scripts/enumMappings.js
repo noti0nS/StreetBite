@@ -58,15 +58,28 @@ class OrderStatus extends EnumValue {
   }
 }
 
+const ACCOMPANIMENT_IMAGE_URL = new URL(
+  "../Imgs/images/eachCategory/acompanhamento.jpg",
+  import.meta.url,
+).href;
+const DRINK_IMAGE_URL = new URL(
+  "../Imgs/images/eachCategory/bebida.jpg",
+  import.meta.url,
+).href;
+const COMBO_IMAGE_URL = new URL(
+  "../Imgs/images/eachCategory/combo.jpg",
+  import.meta.url,
+).href;
+const SNACK_IMAGE_URL = new URL(
+  "../Imgs/images/eachCategory/lanche.jpg",
+  import.meta.url,
+).href;
+
 const PRODUCT_CATEGORY_OPTIONS = [
-  new ProductCategory(
-    0,
-    "Acompanhamento",
-    "../Imgs/images/eachCategory/acompanhamento.jpg",
-  ),
-  new ProductCategory(1, "Bebida", "../Imgs/images/eachCategory/bebida.jpg"),
-  new ProductCategory(2, "Combo", "../Imgs/images/eachCategory/combo.jpg"),
-  new ProductCategory(3, "Lanche", "../Imgs/images/eachCategory/lanche.jpg"),
+  new ProductCategory(0, "Acompanhamento", ACCOMPANIMENT_IMAGE_URL),
+  new ProductCategory(1, "Bebida", DRINK_IMAGE_URL),
+  new ProductCategory(2, "Combo", COMBO_IMAGE_URL),
+  new ProductCategory(3, "Lanche", SNACK_IMAGE_URL),
 ];
 
 const PAYMENT_METHOD_OPTIONS = [

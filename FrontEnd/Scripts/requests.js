@@ -11,6 +11,13 @@ import {
   PAYMENT_METHOD_OPTIONS,
 } from "./enumMappings.js";
 
+const CHECK_ICON_URL = new URL("../Imgs/icons/checkIcon.svg", import.meta.url)
+  .href;
+const DELETE_ICON_URL = new URL(
+  "../Imgs/icons/deleteIcon.svg",
+  import.meta.url,
+).href;
+
 (() => {
   const api = new ApiService();
 
@@ -337,13 +344,13 @@ import {
           "aria-label",
           "Marcar pedido como concluído",
         );
-        orderDoneButton.innerHTML = `<img src="../Imgs/icons/checkIcon.svg" alt="Concluir pedido" />`;
+        orderDoneButton.innerHTML = `<img src="${CHECK_ICON_URL}" alt="Concluir pedido" />`;
 
         const orderDeleteButton = document.createElement("button");
         orderDeleteButton.className = "orderPreparingButtons";
         orderDeleteButton.type = "button";
         orderDeleteButton.setAttribute("aria-label", "Cancelar pedido");
-        orderDeleteButton.innerHTML = `<img src="../Imgs/icons/deleteIcon.svg" alt="Cancelar pedido" />`;
+        orderDeleteButton.innerHTML = `<img src="${DELETE_ICON_URL}" alt="Cancelar pedido" />`;
 
         orderDoneButton.addEventListener("click", async () => {
           if (!orderId) {

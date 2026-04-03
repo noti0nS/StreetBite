@@ -6,6 +6,13 @@ import {
   serializeProductCategory,
 } from "./productCategories.js";
 
+const EDIT_ICON_URL = new URL("../Imgs/icons/editIcon.svg", import.meta.url)
+  .href;
+const DELETE_ICON_URL = new URL(
+  "../Imgs/icons/deleteIcon.svg",
+  import.meta.url,
+).href;
+
 (() => {
   const api = new ApiService();
 
@@ -104,10 +111,10 @@ import {
       itemImage.src = getProductCategoryImage(produto.categoria, produto.nome);
       itemImage.alt = `Imagem do item ${productName.textContent}`;
 
-      editImg.src = "../Imgs/icons/editIcon.svg";
+      editImg.src = EDIT_ICON_URL;
       editImg.alt = "Editar item";
 
-      deleteImg.src = "../Imgs/icons/deleteIcon.svg";
+      deleteImg.src = DELETE_ICON_URL;
       deleteImg.alt = "Excluir item";
       editButton.setAttribute(
         "aria-label",
