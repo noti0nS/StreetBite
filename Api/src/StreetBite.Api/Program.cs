@@ -8,6 +8,8 @@ builder.Services.AddApiServices(builder.Configuration);
 
 var app = builder.Build();
 
+await app.MigrateDatabaseAsync();
+
 app.UseApiConfiguration();
 
 app.MapGet("/", () => new { Message = "OK" });

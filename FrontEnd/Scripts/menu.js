@@ -6,6 +6,13 @@ import {
   serializeProductCategory,
 } from './productCategories.js';
 
+const EDIT_ICON_URL = new URL("../Imgs/icons/editIcon.svg", import.meta.url)
+  .href;
+const DELETE_ICON_URL = new URL(
+  "../Imgs/icons/deleteIcon.svg",
+  import.meta.url,
+).href;
+
 (() => {
   const api = new ApiService();
   const currencyFormatter = new Intl.NumberFormat('pt-BR', {
@@ -36,11 +43,11 @@ import {
   let editingItemId = null;
 
   function resetWizardForm() {
-    inputName.value = '';
-    selectCategory.value = 'Lanche';
-    inputPrice.value = '';
-    inputDesc.value = '';
-    imageImg.src = '';
+    inputName.value = "";
+    selectCategory.value = "3";
+    inputPrice.value = "";
+    inputDesc.value = "";
+    imageImg.src = "";
   }
 
   function openWizard(mode, produto = null) {
@@ -48,14 +55,15 @@ import {
     editingItemId = produto?.id ?? produto?.produtoId ?? null;
 
     if (editMode && produto) {
-      wizardTitle.textContent = 'Assistente de Edição de Item';
-      wizardSubtitle.textContent = 'Atualize os dados do item selecionado.';
-      inputName.value = produto.nome ?? '';
-      selectCategory.value =
-        normalizeProductCategory(produto.categoria) || 'Lanche';
-      inputPrice.value = produto.preco ?? '';
-      inputDesc.value = produto.descricao ?? '';
-      wizardNext.textContent = 'Salvar Edição';
+      wizardTitle.textContent = "Assistente de Edição de Item";
+      wizardSubtitle.textContent = "Atualize os dados do item selecionado.";
+      inputName.value = produto.nome ?? "";
+      selectCategory.value = String(
+        serializeProductCategory(produto.categoria) ?? 3,
+      );
+      inputPrice.value = produto.preco ?? "";
+      inputDesc.value = produto.descricao ?? "";
+      wizardNext.textContent = "Salvar Edição";
     } else {
       wizardTitle.textContent = 'Assistente de Criação de Item';
       wizardSubtitle.textContent =
@@ -123,15 +131,11 @@ import {
       itemImage.alt = `Imagem do item ${productName.textContent}`;
       itemImage.loading = 'lazy';
 
-      editButton.type = 'button';
-      deleteButton.type = 'button';
-      editButton.innerHTML = '';
-      deleteButton.innerHTML = '';
-      editImg.src = '../Imgs/icons/editIcon.svg';
-      editImg.alt = 'Editar item';
+      editImg.src = EDIT_ICON_URL;
+      editImg.alt = "Editar item";
 
-      deleteImg.src = '../Imgs/icons/deleteIcon.svg';
-      deleteImg.alt = 'Excluir item';
+      deleteImg.src = DELETE_ICON_URL;
+      deleteImg.alt = "Excluir item";
       editButton.setAttribute(
         'aria-label',
         `Editar ${productName.textContent}`,
