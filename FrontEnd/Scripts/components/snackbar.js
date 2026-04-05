@@ -1,6 +1,6 @@
+import "../../Styles/components/snackbar.css";
+
 const COMPONENT_ROOT_ID = "sbSnackbarRoot";
-const COMPONENT_STYLE_ID = "sbSnackbarStyle";
-const COMPONENT_STYLE_VERSION = "20260401-top";
 const DEFAULT_DURATION_MS = 4200;
 const EXIT_ANIMATION_MS = 220;
 const MAX_VISIBLE_SNACKBARS = 4;
@@ -22,32 +22,8 @@ class SnackbarManager {
 
   ensureReady() {
     if (!document.body) return false;
-    this.ensureStylesheet();
     this.ensureRoot();
     return this.root != null;
-  }
-
-  ensureStylesheet() {
-    const stylesheetUrl = new URL(
-      "../../Styles/components/snackbar.css",
-      import.meta.url,
-    );
-    stylesheetUrl.searchParams.set("v", COMPONENT_STYLE_VERSION);
-    const resolvedHref = stylesheetUrl.href;
-
-    const existing = document.getElementById(COMPONENT_STYLE_ID);
-    if (existing instanceof HTMLLinkElement) {
-      if (existing.href !== resolvedHref) {
-        existing.href = resolvedHref;
-      }
-      return;
-    }
-
-    const link = document.createElement("link");
-    link.id = COMPONENT_STYLE_ID;
-    link.rel = "stylesheet";
-    link.href = resolvedHref;
-    document.head.appendChild(link);
   }
 
   ensureRoot() {

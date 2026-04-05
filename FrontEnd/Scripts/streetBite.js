@@ -83,7 +83,7 @@ const pages = {
     html: "Iframes/menu.html",
   },
   requests: {
-    html: "Iframes/requests.html",
+    html: "Iframes/pedidos.html",
   },
   settings: {
     html: "Iframes/settings.html",
@@ -94,7 +94,7 @@ const pages = {
 const hrefToPageKey = {
   "home.html": "home",
   "menu.html": "menu",
-  "requests.html": "requests",
+  "pedidos.html": "requests",
   "settings.html": "settings",
 };
 
