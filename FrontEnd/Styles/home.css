@@ -69,24 +69,31 @@ h6 {
 
 .midPage {
   margin-bottom: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  align-items: stretch;
 }
+
 .grid img {
   width: 250px;
   height: 200px;
 }
+
 .grid h3 {
   font-style: normal;
   font-weight: bold;
 }
+.grid h2 {
+  font-style: normal;
+  font-weight: bold;
+  font-size: larger;
+}
 .grid {
   font-size: 25px;
   background-color: var(--primary);
-  width: 350px;
+  width: 100%;
+  max-width: 350px;
   height: 350px;
   border-radius: 5px;
   justify-content: center;
@@ -96,6 +103,7 @@ h6 {
   gap: 10px;
   transition: 0.3s;
   color: var(--card);
+  justify-self: center;
 }
 
 .bottomPage {
