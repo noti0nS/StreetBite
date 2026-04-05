@@ -1,5 +1,6 @@
+import "../../Styles/components/loadingProgress.css";
+
 const COMPONENT_ROOT_ID = "sbLoadingProgress";
-const COMPONENT_STYLE_ID = "sbLoadingProgressStyle";
 const DEFAULT_MESSAGE = "Carregando dados...";
 
 const REVEAL_DELAY_MS = 140;
@@ -26,22 +27,8 @@ class LoadingProgress {
 
   ensureReady() {
     if (!document.body) return false;
-    this.ensureStylesheet();
     this.ensureRoot();
     return this.root != null;
-  }
-
-  ensureStylesheet() {
-    if (document.getElementById(COMPONENT_STYLE_ID)) return;
-
-    const link = document.createElement("link");
-    link.id = COMPONENT_STYLE_ID;
-    link.rel = "stylesheet";
-    link.href = new URL(
-      "../../Styles/components/loadingProgress.css",
-      import.meta.url,
-    ).href;
-    document.head.appendChild(link);
   }
 
   ensureRoot() {
